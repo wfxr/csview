@@ -1,11 +1,15 @@
 [package]
-name = "csviewer"
+name = "csview"
 version = "0.1.0"
 authors = ["Wenxuan Zhang <wenxuangm@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[target.'cfg(target_family = "unix")'.dependencies]
+nix = "0.18"
+
 [dependencies]
 csv = "1.1"
-unicode-width = "0.1"
+prettytable-rs = "^0.8"
+structopt = "0.3"
