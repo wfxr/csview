@@ -1,7 +1,7 @@
 use prettytable::{csv::ReaderBuilder, format, Cell, Row, Table};
 use std::io::BufRead;
 
-pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char) {
+pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char, style: format::TableFormat) {
     let csv_reader = &mut ReaderBuilder::new()
         .delimiter(delimiter as u8)
         .has_headers(has_headers)
@@ -22,6 +22,6 @@ pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char) {
                 .collect(),
         );
     }
-    table.set_format(*format::consts::FORMAT_NO_LINESEP_WITH_TITLE);
+    table.set_format(style);
     table.printstd();
 }

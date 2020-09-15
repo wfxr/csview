@@ -18,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 None => Box::new(BufReader::new(io::stdin())),
             };
             let delimiter = if opt.tsv { '\t' } else { opt.delimiter };
-            core::print_csv(reader, !opt.no_headers, delimiter);
+            core::print_csv(reader, !opt.no_headers, delimiter, opt.border.into());
         }
     }
     Ok(())

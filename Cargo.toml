@@ -12,4 +12,4 @@ nix = "0.18"
 [dependencies]
 csv = "1.1"
 prettytable-rs = "^0.8"
-structopt = "0.3"
+structopt = { version = "0.3", features = ["wrap_help"] }
