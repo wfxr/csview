@@ -11,15 +11,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Some(Subcommand::Completion(CompletionOpt { shell })) => {
             Opt::clap().gen_completions_to(env!("CARGO_PKG_NAME"), shell, &mut std::io::stdout());
         }
-        Some(Subcommand::Update) => {
-            println!("update");
-        }
+        Some(Subcommand::Update) => todo!("self update"),
         None => {
             let reader: Box<dyn BufRead> = match opt.file {
                 Some(path) => Box::new(BufReader::new(File::open(path)?)),
                 None => Box::new(BufReader::new(io::stdin())),
             };
-            core::print_csv(reader, !opt.no_title, opt.delimiter);
+            let delimiter = if opt.tsv { '\t' } else { opt.delimiter };
+            core::print_csv(reader, !opt.no_headers, delimiter);
         }
     }
     Ok(())

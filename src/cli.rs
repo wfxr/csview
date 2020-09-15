@@ -11,8 +11,12 @@ pub struct Opt {
     pub file: Option<PathBuf>,
 
     /// Set if csv has no title
-    #[structopt(long = "no-title")]
-    pub no_title: bool,
+    #[structopt(short = "H", long = "no-headers")]
+    pub no_headers: bool,
+
+    /// Use '\t' as delimiter for tsv, overrides '-d' option
+    #[structopt(short = "t", long = "tsv")]
+    pub tsv: bool,
 
     /// Field delimiter
     #[structopt(short = "d", long = "delimiter", default_value = ",")]
@@ -26,11 +30,9 @@ pub struct Opt {
 #[derive(StructOpt, Debug)]
 pub enum Subcommand {
     /// Generate shell completion file
-    // #[structopt(name = "completion")]
     Completion(CompletionOpt),
 
     /// Check for updates
-    // #[structopt(name = "update")]
     Update,
 }
 
