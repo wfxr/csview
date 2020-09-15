@@ -45,6 +45,7 @@ pub enum Subcommand {
 #[derive(StructOpt)]
 pub struct CompletionOpt {
     /// Target shell name
+    #[structopt(possible_values = &clap::Shell::variants())]
     pub shell: clap::Shell,
 }
 
