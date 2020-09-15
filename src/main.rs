@@ -19,7 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Some(path) => Box::new(BufReader::new(File::open(path)?)),
                 None => Box::new(BufReader::new(io::stdin())),
             };
-            core::print_csv(reader, !opt.no_title);
+            core::print_csv(reader, !opt.no_title, opt.delimiter);
         }
     }
     Ok(())

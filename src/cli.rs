@@ -14,6 +14,10 @@ pub struct Opt {
     #[structopt(long = "no-title")]
     pub no_title: bool,
 
+    /// Field delimiter
+    #[structopt(short = "d", long = "delimiter", default_value = ",")]
+    pub delimiter: char,
+
     /// Subcommand
     #[structopt(subcommand)]
     pub subcommand: Option<Subcommand>,
