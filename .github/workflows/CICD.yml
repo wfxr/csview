@@ -1,0 +1,310 @@
+name: CICD
+
+env:
+  PROJECT_NAME: csview
+  PROJECT_DESC: "A high performance csv viewer with cjk/emoji support."
+  PROJECT_MAINTAINER: "Wenxuan Zhang <wenxuangm@gmail.com>"
+  PROJECT_HOMEPAGE: "https://github.com/wfxr/csview"
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.job.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          # { os, target, cargo-options, features, use-cross, toolchain }
+          - { os: ubuntu-latest  , target: arm-unknown-linux-gnueabihf , use-cross: use-cross }
+          - { os: ubuntu-18.04   , target: aarch64-unknown-linux-gnu   , use-cross: use-cross }
+          - { os: ubuntu-18.04   , target: i686-unknown-linux-gnu      , use-cross: use-cross }
+          - { os: ubuntu-18.04   , target: i686-unknown-linux-musl     , use-cross: use-cross }
+          - { os: ubuntu-18.04   , target: x86_64-unknown-linux-gnu    , use-cross: use-cross }
+          - { os: ubuntu-18.04   , target: x86_64-unknown-linux-musl   , use-cross: use-cross }
+          - { os: ubuntu-16.04   , target: x86_64-unknown-linux-gnu    , use-cross: use-cross }
+          - { os: macos-latest   , target: x86_64-apple-darwin                                }
+          # - { os: windows-latest , target: i686-pc-windows-msvc                               }
+          - { os: windows-latest , target: x86_64-pc-windows-msvc                             }
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
+    - name: Install prerequisites
+      shell: bash
+      run: |
+        case ${{ matrix.job.target }} in
+          arm-unknown-linux-gnueabihf) sudo apt-get -y update; sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
+          aarch64-unknown-linux-gnu)   sudo apt-get -y update; sudo apt-get -y install gcc-aarch64-linux-gnu   ;;
+        esac
+    - name: Initialize workflow variables
+      id: vars
+      shell: bash
+      run: |
+        # toolchain
+        TOOLCHAIN="stable" ## default to "stable" toolchain
+        # * specify alternate TOOLCHAIN for *-pc-windows-gnu targets; gnu targets on Windows are broken for the standard *-pc-windows-msvc toolchain (refs: <https://github.com/rust-lang/rust/issues/47048>, <https://github.com/rust-lang/rust/issues/53454>, <https://github.com/rust-lang/cargo/issues/6754>)
+        case ${{ matrix.job.target }} in *-pc-windows-gnu) TOOLCHAIN="stable-${{ matrix.job.target }}" ;; esac;
+        # * use requested TOOLCHAIN if specified
+        if [ -n "${{ matrix.job.toolchain }}" ]; then TOOLCHAIN="${{ matrix.job.toolchain }}" ; fi
+        echo set-output name=TOOLCHAIN::${TOOLCHAIN}
+        echo ::set-output name=TOOLCHAIN::${TOOLCHAIN}
+        # staging directory
+        STAGING='_staging'
+        echo set-output name=STAGING::${STAGING}
+        echo ::set-output name=STAGING::${STAGING}
+        # determine EXE suffix
+        EXE_suffix="" ; case ${{ matrix.job.target }} in *-pc-windows-*) EXE_suffix=".exe" ;; esac;
+        echo set-output name=EXE_suffix::${EXE_suffix}
+        echo ::set-output name=EXE_suffix::${EXE_suffix}
+        # parse commit reference info
+        REF_NAME=${GITHUB_REF#refs/*/}
+        unset REF_BRANCH ; case ${GITHUB_REF} in refs/heads/*) REF_BRANCH=${GITHUB_REF#refs/heads/} ;; esac;
+        unset REF_TAG ; case ${GITHUB_REF} in refs/tags/*) REF_TAG=${GITHUB_REF#refs/tags/} ;; esac;
+        REF_SHAS=${GITHUB_SHA:0:8}
+        echo set-output name=REF_NAME::${REF_NAME}
+        echo set-output name=REF_BRANCH::${REF_BRANCH}
+        echo set-output name=REF_TAG::${REF_TAG}
+        echo set-output name=REF_SHAS::${REF_SHAS}
+        echo ::set-output name=REF_NAME::${REF_NAME}
+        echo ::set-output name=REF_BRANCH::${REF_BRANCH}
+        echo ::set-output name=REF_TAG::${REF_TAG}
+        echo ::set-output name=REF_SHAS::${REF_SHAS}
+        # parse target
+        unset TARGET_ARCH ; case ${{ matrix.job.target }} in arm-unknown-linux-gnueabihf) TARGET_ARCH=arm ;; i686-*) TARGET_ARCH=i686 ;; x86_64-*) TARGET_ARCH=x86_64 ;; esac;
+        echo set-output name=TARGET_ARCH::${TARGET_ARCH}
+        echo ::set-output name=TARGET_ARCH::${TARGET_ARCH}
+        unset TARGET_OS ; case ${{ matrix.job.target }} in *-linux-*) TARGET_OS=linux ;; *-apple-*) TARGET_OS=macos ;; *-windows-*) TARGET_OS=windows ;; esac;
+        echo set-output name=TARGET_OS::${TARGET_OS}
+        echo ::set-output name=TARGET_OS::${TARGET_OS}
+        # package name
+        PKG_suffix=".tar.gz" ; case ${{ matrix.job.target }} in *-pc-windows-*) PKG_suffix=".zip" ;; esac;
+        PKG_BASENAME=${PROJECT_NAME}-${REF_TAG:-$REF_SHAS}-${{ matrix.job.target }}
+        PKG_NAME=${PKG_BASENAME}${PKG_suffix}
+        echo set-output name=PKG_suffix::${PKG_suffix}
+        echo set-output name=PKG_BASENAME::${PKG_BASENAME}
+        echo set-output name=PKG_NAME::${PKG_NAME}
+        echo ::set-output name=PKG_suffix::${PKG_suffix}
+        echo ::set-output name=PKG_BASENAME::${PKG_BASENAME}
+        echo ::set-output name=PKG_NAME::${PKG_NAME}
+        # deployable tag? (ie, leading "vM" or "M"; M == version number)
+        unset DEPLOY ; if [[ $REF_TAG =~ ^[vV]?[0-9].* ]]; then DEPLOY='true' ; fi
+        echo set-output name=DEPLOY::${DEPLOY:-<empty>/false}
+        echo ::set-output name=DEPLOY::${DEPLOY}
+        # DPKG architecture?
+        unset DPKG_ARCH
+        case ${{ matrix.job.target }} in
+          aarch64-*-linux-*) DPKG_ARCH=arm64 ;;
+          arm-*-linux-*hf) DPKG_ARCH=armhf ;;
+          i686-*-linux-*) DPKG_ARCH=i686 ;;
+          x86_64-*-linux-*) DPKG_ARCH=amd64 ;;
+        esac;
+        echo set-output name=DPKG_ARCH::${DPKG_ARCH}
+        echo ::set-output name=DPKG_ARCH::${DPKG_ARCH}
+        # DPKG version?
+        unset DPKG_VERSION ; if [[ $REF_TAG =~ ^[vV]?[0-9].* ]]; then DPKG_VERSION=${REF_TAG/#[vV]/} ; fi
+        echo set-output name=DPKG_VERSION::${DPKG_VERSION}
+        echo ::set-output name=DPKG_VERSION::${DPKG_VERSION}
+        # DPKG base name/conflicts?
+        DPKG_BASENAME=${PROJECT_NAME}
+        DPKG_CONFLICTS=${PROJECT_NAME}-musl
+        case ${{ matrix.job.target }} in *-musl) DPKG_BASENAME=${PROJECT_NAME}-musl ; DPKG_CONFLICTS=${PROJECT_NAME} ;; esac;
+        echo set-output name=DPKG_BASENAME::${DPKG_BASENAME}
+        echo set-output name=DPKG_CONFLICTS::${DPKG_CONFLICTS}
+        echo ::set-output name=DPKG_BASENAME::${DPKG_BASENAME}
+        echo ::set-output name=DPKG_CONFLICTS::${DPKG_CONFLICTS}
+        # DPKG name
+        unset DPKG_NAME;
+        if [[ -n $DPKG_ARCH && -n $DPKG_VERSION ]]; then DPKG_NAME="${DPKG_BASENAME}_${DPKG_VERSION}_${DPKG_ARCH}.deb" ; fi
+        echo set-output name=DPKG_NAME::${DPKG_NAME}
+        echo ::set-output name=DPKG_NAME::${DPKG_NAME}
+        # target-specific options
+        # * CARGO_USE_CROSS (truthy)
+        CARGO_USE_CROSS='true' ; case '${{ matrix.job.use-cross }}' in ''|0|f|false|n|no) unset CARGO_USE_CROSS ;; esac;
+        echo set-output name=CARGO_USE_CROSS::${CARGO_USE_CROSS:-<empty>/false}
+        echo ::set-output name=CARGO_USE_CROSS::${CARGO_USE_CROSS}
+        # # * `arm` cannot be tested on ubuntu-* hosts (b/c testing is currently primarily done via comparison of target outputs with built-in outputs and the `arm` target is not executable on the host)
+        JOB_DO_TESTING="true"
+        case ${{ matrix.job.target }} in arm-*) unset JOB_DO_TESTING ;; esac;
+        echo set-output name=JOB_DO_TESTING::${JOB_DO_TESTING:-<empty>/false}
+        echo ::set-output name=JOB_DO_TESTING::${JOB_DO_TESTING}
+        # # * test only library unit tests and binary for arm-type targets
+        unset CARGO_TEST_OPTIONS
+        # unset CARGO_TEST_OPTIONS ; case ${{ matrix.job.target }} in arm-* | aarch64-*) CARGO_TEST_OPTIONS="--lib --bin ${PROJECT_NAME}" ;; esac;
+        echo set-output name=CARGO_TEST_OPTIONS::${CARGO_TEST_OPTIONS}
+        echo ::set-output name=CARGO_TEST_OPTIONS::${CARGO_TEST_OPTIONS}
+        # * executable for `strip`?
+        STRIP="strip" ; case ${{ matrix.job.target }} in arm-unknown-linux-gnueabihf) STRIP="arm-linux-gnueabihf-strip" ;; aarch64-unknown-linux-gnu) STRIP="aarch64-linux-gnu-strip" ;; *-pc-windows-msvc) STRIP="" ;; esac;
+        echo set-output name=STRIP::${STRIP}
+        echo ::set-output name=STRIP::${STRIP}
+    - name: Create all needed build/work directories
+      shell: bash
+      run: |
+        mkdir -p '${{ steps.vars.outputs.STAGING }}'
+        mkdir -p '${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}'
+        mkdir -p '${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}/completions'
+        mkdir -p '${{ steps.vars.outputs.STAGING }}/dpkg'
+        mkdir -p tmp
+        printf 'a,b,c\n1,2,3\n4,5,6\n7,8,9' > tmp/demo.csv
+
+    - name: Info
+      shell: bash
+      run: |
+        gcc --version || true
+        rustup -V
+        rustup toolchain list
+        rustup default
+        cargo -V
+        rustc -V
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ steps.vars.outputs.CARGO_USE_CROSS }}
+        command: build
+        args: --release --target=${{ matrix.job.target }} ${{ matrix.job.cargo-options }}
+    - name: Test
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ steps.vars.outputs.CARGO_USE_CROSS }}
+        command: test
+        args: --target=${{ matrix.job.target }} ${{ steps.vars.outputs.CARGO_TEST_OPTIONS}} ${{ matrix.job.cargo-options }}
+    - name: Test run
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ steps.vars.outputs.CARGO_USE_CROSS }}
+        command: run
+        args: --target=${{ matrix.job.target }} ${{ matrix.job.cargo-options }} -- tmp/demo.csv
+    - name: Strip binary
+      shell: bash
+      run: |
+        if [ -n "${{ steps.vars.outputs.STRIP }}" ]; then
+          ${{ steps.vars.outputs.STRIP }} 'target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}'
+        fi
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: ${{ env.PROJECT_NAME }}-${{ matrix.job.target }}
+        path: target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}
+    - name: Package
+      shell: bash
+      run: |
+        ARCHIVE_DIR='${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}/'
+        COPYRIGHT_YEARS="2020 - "$(date "+%Y")
+        BINARY_NAME='${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}'
+        BINARY_PATH='target/${{ matrix.job.target }}/release/'"$BINARY_NAME"
+        # Copy binary
+        cp "$BINARY_PATH" "$ARCHIVE_DIR"
+
+        # README, LICENSE and CHANGELOG files
+        cp README.md LICENSE* "$ARCHIVE_DIR"
+
+        # Autocompletion files
+        cp -r 'completions' "$ARCHIVE_DIR/"
+
+        # base compressed package
+        pushd '${{ steps.vars.outputs.STAGING }}/' >/dev/null
+        case ${{ matrix.job.target }} in
+          *-pc-windows-*) 7z -y a  '${{ steps.vars.outputs.PKG_NAME }}' '${{ steps.vars.outputs.PKG_BASENAME }}'/* | tail -2 ;;
+          *)              tar zcvf '${{ steps.vars.outputs.PKG_NAME }}' '${{ steps.vars.outputs.PKG_BASENAME }}'/* ;;
+        esac;
+        popd >/dev/null
+
+        # Debian package
+        if [ -n "${{ steps.vars.outputs.DPKG_NAME }}" ]; then
+          DPKG_DIR="${{ steps.vars.outputs.STAGING }}/dpkg"
+
+          # Binary
+          install -Dm755 "$BINARY_PATH" "${DPKG_DIR}/usr/bin/$BINARY_NAME"
+
+          # Work out shared library dependencies
+          # dpkg-shlibdeps requires debian/control file. Dummy it and clean up
+          # TODO: disable due to install error: csview depends on libgcc-s1 (>= 4.2)
+          # mkdir "./debian"
+          # touch "./debian/control"
+          # case ${{ matrix.job.target }} in
+          #   aarch64-*-linux-*) DEPENDS="$(dpkg-shlibdeps -l/usr/aarch64-linux-gnu/lib   -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+          #   arm-*-linux-*hf)   DEPENDS="$(dpkg-shlibdeps -l/usr/arm-linux-gnueabihf/lib -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+          #   i686-*-linux-*)    DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+          #   x86_64-*-linux-*)  DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+          # esac;
+          # rm -rf "./debian"
+
+          # Autocompletion files
+          dir="${DPKG_DIR}/usr/share/fish/vendor_completions.d/" && mkdir -p "$dir"
+          install -Dm644 completions/fish/* "$dir"
+          dir="${DPKG_DIR}/usr/share/zsh/vendor-completions/" && mkdir -p "$dir"
+          install -Dm644 completions/zsh/*  "$dir"
+
+          # README and LICENSE
+          dir="${DPKG_DIR}/usr/share/doc/${{ steps.vars.outputs.DPKG_BASENAME }}/" && mkdir -p "$dir"
+          install -Dm644 README.md "$dir"
+          install -Dm644 LICENSE*  "$dir"
+
+          cat > "${DPKG_DIR}/usr/share/doc/${{ steps.vars.outputs.DPKG_BASENAME }}/copyright" <<EOF
+        Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+        Upstream-Name: ${{ env.PROJECT_NAME }}
+        Source: ${{ env.PROJECT_HOMEPAGE }}
+
+        Files: *
+        Copyright: $COPYRIGHT_YEARS ${{ env.PROJECT_MAINTAINER }}
+        License: Apache-2.0 or MIT
+
+        License: Apache-2.0
+         On Debian systems, the complete text of the Apache-2.0 can be found in the
+         file /usr/share/common-licenses/Apache-2.0.
+
+        License: MIT
+         Permission is hereby granted, free of charge, to any
+         person obtaining a copy of this software and associated
+         documentation files (the "Software"), to deal in the
+         Software without restriction, including without
+         limitation the rights to use, copy, modify, merge,
+         publish, distribute, sublicense, and/or sell copies of
+         the Software, and to permit persons to whom the Software
+         is furnished to do so, subject to the following
+         conditions:
+         .
+         The above copyright notice and this permission notice
+         shall be included in all copies or substantial portions
+         of the Software.
+         .
+         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+         ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+         TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+         PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+         SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+         CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+         OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+         IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+         DEALINGS IN THE SOFTWARE.
+        EOF
+          chmod 644 "${DPKG_DIR}/usr/share/doc/${{ steps.vars.outputs.DPKG_BASENAME }}/copyright"
+
+          # control file
+          mkdir -p "${DPKG_DIR}/DEBIAN"
+          cat > "${DPKG_DIR}/DEBIAN/control" <<EOF
+        Package: ${{ steps.vars.outputs.DPKG_BASENAME }}
+        Version: ${{ steps.vars.outputs.DPKG_VERSION }}
+        Section: utils
+        Priority: optional
+        Maintainer: ${{ env.PROJECT_MAINTAINER }}
+        Homepage: ${{ env.PROJECT_HOMEPAGE }}
+        Architecture: ${{ steps.vars.outputs.DPKG_ARCH }}
+        Depends: $DEPENDS
+        Provides: ${{ env.PROJECT_NAME }}
+        Conflicts: ${{ steps.vars.outputs.DPKG_CONFLICTS }}
+        Description: ${{ env.PROJECT_DESC }}
+        EOF
+
+          # build dpkg
+          fakeroot dpkg-deb --build "${DPKG_DIR}" "${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.DPKG_NAME }}"
+        fi
+    - name: Publish archives and packages
+      uses: softprops/action-gh-release@v1
+      if: steps.vars.outputs.DEPLOY
+      with:
+        files: |
+          ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
+          ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.DPKG_NAME }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,11 +1,12 @@
 mod cli;
 mod core;
+mod util;
 use cli::{CompletionOpt, Opt, StructOpt, Subcommand};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    cli::reset_signal_pipe_handler();
+    util::reset_signal_pipe_handler();
     let opt: Opt = Opt::from_args();
     match opt.subcommand {
         Some(Subcommand::Completion(CompletionOpt { shell })) => {

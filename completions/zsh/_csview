@@ -1,0 +1,100 @@
+#compdef csview
+
+autoload -U is-at-least
+
+_csview() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" \
+'-d+[Field delimiter]' \
+'--delimiter=[Field delimiter]' \
+'--style=[Border style]: :(None Ascii Sharp Rounded Reinforced)' \
+'-H[Set if csv has no title]' \
+'--no-headers[Set if csv has no title]' \
+'-t[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
+'--tsv[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
+'-h[Prints help information]' \
+'--help[Prints help information]' \
+'-V[Prints version information]' \
+'--version[Prints version information]' \
+'::FIEL -- File to read:_files' \
+":: :_csview_commands" \
+"*::: :->csview" \
+&& ret=0
+    case $state in
+    (csview)
+        words=($line[2] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:csview-command-$line[2]:"
+        case $line[2] in
+            (completion)
+_arguments "${_arguments_options[@]}" \
+'-h[Prints help information]' \
+'--help[Prints help information]' \
+'-V[Prints version information]' \
+'--version[Prints version information]' \
+':shell -- Target shell name:(zsh bash fish powershell elvish)' \
+&& ret=0
+;;
+(update)
+_arguments "${_arguments_options[@]}" \
+'-h[Prints help information]' \
+'--help[Prints help information]' \
+'-V[Prints version information]' \
+'--version[Prints version information]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'-h[Prints help information]' \
+'--help[Prints help information]' \
+'-V[Prints version information]' \
+'--version[Prints version information]' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_csview_commands] )) ||
+_csview_commands() {
+    local commands; commands=(
+        "completion:Generate shell completion file" \
+"update:Check for updates" \
+"help:Prints this message or the help of the given subcommand(s)" \
+    )
+    _describe -t commands 'csview commands' commands "$@"
+}
+(( $+functions[_csview__completion_commands] )) ||
+_csview__completion_commands() {
+    local commands; commands=(
+        
+    )
+    _describe -t commands 'csview completion commands' commands "$@"
+}
+(( $+functions[_csview__help_commands] )) ||
+_csview__help_commands() {
+    local commands; commands=(
+        
+    )
+    _describe -t commands 'csview help commands' commands "$@"
+}
+(( $+functions[_csview__update_commands] )) ||
+_csview__update_commands() {
+    local commands; commands=(
+        
+    )
+    _describe -t commands 'csview update commands' commands "$@"
+}
+
+_csview "$@"
