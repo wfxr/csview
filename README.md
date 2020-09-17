@@ -38,6 +38,20 @@ $ csview example.csv
 | 1996 | Jeep  | Grand Cherokee                         | MUST SELL!             | 4799.00 |
 |      |       |                                        | air, moon roof, loaded |         |
 +------+-------+----------------------------------------+------------------------+---------+
+
+$ head -n10 /etc/passwd | csview --no-headers -d:
++------------------------+---+-------+-------+----------------------------+-----------------+
+| root                   | x | 0     | 0     |                            | /root           |
+| bin                    | x | 1     | 1     |                            | /               |
+| daemon                 | x | 2     | 2     |                            | /               |
+| mail                   | x | 8     | 12    |                            | /var/spool/mail |
+| ftp                    | x | 14    | 11    |                            | /srv/ftp        |
+| http                   | x | 33    | 33    |                            | /srv/http       |
+| nobody                 | x | 65534 | 65534 | Nobody                     | /               |
+| dbus                   | x | 81    | 81    | System Message Bus         | /               |
+| systemd-journal-remote | x | 982   | 982   | systemd Journal Remote     | /               |
+| systemd-network        | x | 981   | 981   | systemd Network Management | /               |
++------------------------+---+-------+-------+----------------------------+-----------------+
 ```
 
 Run `csview --help` to view detailed usage.
@@ -45,6 +59,8 @@ Run `csview --help` to view detailed usage.
 ### Benchmark
 
 Compared with `csvlook` provided by [csvkit](https://github.com/wireservice/csvkit/tree/1.0.5):
+
+- [sample.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-sample-csv) (10000 rows, 10 cols, 624K size):
 
 ```
 Benchmark #1: csvlook sample.csv
@@ -60,7 +76,20 @@ Summary
    86.32 ± 4.83 times faster than 'csvlook sample.csv'
 ```
 
-[sample.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e)
+- [action.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-action-csv) (10 rows, 4 cols, 1K size):
+```
+Benchmark #1: csvlook action.csv
+  Time (mean ± σ):     316.5 ms ±   5.2 ms    [User: 284.8 ms, System: 35.0 ms]
+  Range (min … max):   309.3 ms … 326.2 ms    10 runs
+
+Benchmark #2: csview action.csv
+  Time (mean ± σ):       0.7 ms ±   0.2 ms    [User: 0.8 ms, System: 0.7 ms]
+  Range (min … max):     0.4 ms …   1.6 ms    933 runs
+
+Summary
+  'csview action.csv' ran
+  461.25 ± 109.34 times faster than 'csvlook action.csv'
+```
 
 ### License
 
