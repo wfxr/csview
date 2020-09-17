@@ -7,7 +7,7 @@ pub use structopt::StructOpt;
 #[structopt(global_settings(&[AppSettings::ColoredHelp]))]
 pub struct Opt {
     /// File to read
-    #[structopt(name = "FIEL")]
+    #[structopt(name = "FILE")]
     pub file: Option<PathBuf>,
 
     /// Specify that the input has no header row.
