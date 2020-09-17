@@ -15,11 +15,11 @@ edit:completion:arg-completer[csview] = [@words]{
     }
     completions = [
         &'csview'= {
-            cand -d 'Field delimiter'
-            cand --delimiter 'Field delimiter'
-            cand --style 'Border style'
-            cand -H 'Set if csv has no title'
-            cand --no-headers 'Set if csv has no title'
+            cand -d 'Specify the field delimiter'
+            cand --delimiter 'Specify the field delimiter'
+            cand --style 'Specify the border style'
+            cand -H 'Specify that the input has no header row'
+            cand --no-headers 'Specify that the input has no header row'
             cand -t 'Use ''\t'' as delimiter for tsv, overrides ''-d'' option'
             cand --tsv 'Use ''\t'' as delimiter for tsv, overrides ''-d'' option'
             cand -h 'Prints help information'

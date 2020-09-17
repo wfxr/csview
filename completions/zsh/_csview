@@ -15,11 +15,11 @@ _csview() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \
-'-d+[Field delimiter]' \
-'--delimiter=[Field delimiter]' \
-'--style=[Border style]: :(None Ascii Sharp Rounded Reinforced)' \
-'-H[Set if csv has no title]' \
-'--no-headers[Set if csv has no title]' \
+'-d+[Specify the field delimiter]' \
+'--delimiter=[Specify the field delimiter]' \
+'--style=[Specify the border style]: :(None Ascii Sharp Rounded Reinforced)' \
+'-H[Specify that the input has no header row]' \
+'--no-headers[Specify that the input has no header row]' \
 '-t[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
 '--tsv[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
 '-h[Prints help information]' \

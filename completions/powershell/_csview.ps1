@@ -20,11 +20,11 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
 
     $completions = @(switch ($command) {
         'csview' {
-            [CompletionResult]::new('-d', 'd', [CompletionResultType]::ParameterName, 'Field delimiter')
-            [CompletionResult]::new('--delimiter', 'delimiter', [CompletionResultType]::ParameterName, 'Field delimiter')
-            [CompletionResult]::new('--style', 'style', [CompletionResultType]::ParameterName, 'Border style')
-            [CompletionResult]::new('-H', 'H', [CompletionResultType]::ParameterName, 'Set if csv has no title')
-            [CompletionResult]::new('--no-headers', 'no-headers', [CompletionResultType]::ParameterName, 'Set if csv has no title')
+            [CompletionResult]::new('-d', 'd', [CompletionResultType]::ParameterName, 'Specify the field delimiter')
+            [CompletionResult]::new('--delimiter', 'delimiter', [CompletionResultType]::ParameterName, 'Specify the field delimiter')
+            [CompletionResult]::new('--style', 'style', [CompletionResultType]::ParameterName, 'Specify the border style')
+            [CompletionResult]::new('-H', 'H', [CompletionResultType]::ParameterName, 'Specify that the input has no header row')
+            [CompletionResult]::new('--no-headers', 'no-headers', [CompletionResultType]::ParameterName, 'Specify that the input has no header row')
             [CompletionResult]::new('-t', 't', [CompletionResultType]::ParameterName, 'Use ''\t'' as delimiter for tsv, overrides ''-d'' option')
             [CompletionResult]::new('--tsv', 'tsv', [CompletionResultType]::ParameterName, 'Use ''\t'' as delimiter for tsv, overrides ''-d'' option')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Prints help information')

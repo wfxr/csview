@@ -41,4 +41,9 @@ repos:
     pass_filenames: false
     language: system
     always_run: true
-    entry: sh -c 'touch build.rs && SHELL_COMPLETIONS_DIR=completions cargo build'
+    entry: >
+      sh -c '
+        touch build.rs &&
+        SHELL_COMPLETIONS_DIR=completions cargo build &&
+        git add completions
+      '

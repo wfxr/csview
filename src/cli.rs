@@ -10,7 +10,7 @@ pub struct Opt {
     #[structopt(name = "FIEL")]
     pub file: Option<PathBuf>,
 
-    /// Set if csv has no title
+    /// Specify that the input has no header row.
     #[structopt(short = "H", long = "no-headers")]
     pub no_headers: bool,
 
@@ -18,11 +18,11 @@ pub struct Opt {
     #[structopt(short = "t", long = "tsv")]
     pub tsv: bool,
 
-    /// Field delimiter
+    /// Specify the field delimiter
     #[structopt(short = "d", long = "delimiter", default_value = ",")]
     pub delimiter: char,
 
-    /// Border style
+    /// Specify the border style
     #[structopt(long = "style", default_value = "Ascii", possible_values = &Border::variants(), case_insensitive = true)]
     pub border: Border,
 
