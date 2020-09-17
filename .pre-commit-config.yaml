@@ -1,0 +1,44 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.1.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: check-added-large-files
+  - id: mixed-line-ending
+  - id: check-toml
+- repo: https://github.com/doublify/pre-commit-rust
+  rev: master
+  hooks:
+  - id: fmt
+  - id: cargo-check
+  - id: clippy
+- repo: local
+  hooks:
+  - id: cargo-fmt
+    name: cargo fmt
+    pass_filenames: false
+    always_run: true
+    language: system
+    entry: cargo fmt
+  - id: cargo-check
+    name: cargo check
+    pass_filenames: false
+    always_run: true
+    language: system
+    entry: cargo check
+  - id: cargo-clippy
+    name: cargo clippy
+    pass_filenames: false
+    language: system
+    always_run: true
+    entry: cargo clippy
+  - id: update-completions
+    name: update shell completions
+    pass_filenames: false
+    language: system
+    always_run: true
+    entry: sh -c 'touch build.rs && SHELL_COMPLETIONS_DIR=completions cargo build'
