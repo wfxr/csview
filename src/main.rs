@@ -12,7 +12,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Some(Subcommand::Completion(CompletionOpt { shell })) => {
             Opt::clap().gen_completions_to(env!("CARGO_PKG_NAME"), shell, &mut std::io::stdout());
         }
-        Some(Subcommand::Update) => todo!("self update"),
         None => {
             let reader: Box<dyn BufRead> = match opt.file {
                 Some(path) => Box::new(BufReader::new(File::open(path)?)),

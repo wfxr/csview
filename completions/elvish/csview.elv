@@ -27,16 +27,9 @@ edit:completion:arg-completer[csview] = [@words]{
             cand -V 'Prints version information'
             cand --version 'Prints version information'
             cand completion 'Generate shell completion file'
-            cand update 'Check for updates'
             cand help 'Prints this message or the help of the given subcommand(s)'
         }
         &'csview;completion'= {
-            cand -h 'Prints help information'
-            cand --help 'Prints help information'
-            cand -V 'Prints version information'
-            cand --version 'Prints version information'
-        }
-        &'csview;update'= {
             cand -h 'Prints help information'
             cand --help 'Prints help information'
             cand -V 'Prints version information'

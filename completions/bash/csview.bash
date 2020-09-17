@@ -19,9 +19,6 @@ _csview() {
             help)
                 cmd+="__help"
                 ;;
-            update)
-                cmd+="__update"
-                ;;
             *)
                 ;;
         esac
@@ -29,7 +26,7 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts=" -H -t -h -V -d  --no-headers --tsv --help --version --delimiter --style  <FIEL>  completion update help"
+            opts=" -H -t -h -V -d  --no-headers --tsv --help --version --delimiter --style  <FIEL>  completion help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -72,21 +69,6 @@ _csview() {
             return 0
             ;;
         csview__help)
-            opts=" -h -V  --help --version  "
-            if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
-                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-                return 0
-            fi
-            case "${prev}" in
-                
-                *)
-                    COMPREPLY=()
-                    ;;
-            esac
-            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-            return 0
-            ;;
-        csview__update)
             opts=" -h -V  --help --version  "
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )

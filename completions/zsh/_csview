@@ -45,14 +45,6 @@ _arguments "${_arguments_options[@]}" \
 ':shell -- Target shell name:(zsh bash fish powershell elvish)' \
 && ret=0
 ;;
-(update)
-_arguments "${_arguments_options[@]}" \
-'-h[Prints help information]' \
-'--help[Prints help information]' \
-'-V[Prints version information]' \
-'--version[Prints version information]' \
-&& ret=0
-;;
 (help)
 _arguments "${_arguments_options[@]}" \
 '-h[Prints help information]' \
@@ -70,7 +62,6 @@ esac
 _csview_commands() {
     local commands; commands=(
         "completion:Generate shell completion file" \
-"update:Check for updates" \
 "help:Prints this message or the help of the given subcommand(s)" \
     )
     _describe -t commands 'csview commands' commands "$@"
@@ -88,13 +79,6 @@ _csview__help_commands() {
         
     )
     _describe -t commands 'csview help commands' commands "$@"
-}
-(( $+functions[_csview__update_commands] )) ||
-_csview__update_commands() {
-    local commands; commands=(
-        
-    )
-    _describe -t commands 'csview update commands' commands "$@"
 }
 
 _csview "$@"

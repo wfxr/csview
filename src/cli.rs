@@ -35,9 +35,6 @@ pub struct Opt {
 pub enum Subcommand {
     /// Generate shell completion file
     Completion(CompletionOpt),
-
-    /// Check for updates
-    Update,
 }
 
 #[derive(StructOpt)]

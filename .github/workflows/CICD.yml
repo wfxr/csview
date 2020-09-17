@@ -218,16 +218,15 @@ jobs:
 
           # Work out shared library dependencies
           # dpkg-shlibdeps requires debian/control file. Dummy it and clean up
-          # TODO: disable due to install error: csview depends on libgcc-s1 (>= 4.2)
-          # mkdir "./debian"
-          # touch "./debian/control"
-          # case ${{ matrix.job.target }} in
-          #   aarch64-*-linux-*) DEPENDS="$(dpkg-shlibdeps -l/usr/aarch64-linux-gnu/lib   -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
-          #   arm-*-linux-*hf)   DEPENDS="$(dpkg-shlibdeps -l/usr/arm-linux-gnueabihf/lib -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
-          #   i686-*-linux-*)    DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
-          #   x86_64-*-linux-*)  DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
-          # esac;
-          # rm -rf "./debian"
+          mkdir "./debian"
+          touch "./debian/control"
+          case ${{ matrix.job.target }} in
+            aarch64-*-linux-*) DEPENDS="$(dpkg-shlibdeps -l/usr/aarch64-linux-gnu/lib   -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+            arm-*-linux-*hf)   DEPENDS="$(dpkg-shlibdeps -l/usr/arm-linux-gnueabihf/lib -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+            i686-*-linux-*)    DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+            x86_64-*-linux-*)  DEPENDS="$(dpkg-shlibdeps                                -O "${DPKG_DIR}/usr/bin/${{ env.PROJECT_NAME }}" 2>/dev/null | sed 's/^shlibs:Depends=//')" ;;
+          esac;
+          rm -rf "./debian"
 
           # Autocompletion files
           dir="${DPKG_DIR}/usr/share/fish/vendor_completions.d/" && mkdir -p "$dir"
