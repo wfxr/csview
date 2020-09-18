@@ -4,7 +4,10 @@ use structopt::clap::{self, arg_enum, AppSettings};
 pub use structopt::StructOpt;
 
 #[derive(StructOpt)]
-#[structopt(global_settings(&[AppSettings::ColoredHelp]))]
+#[structopt(
+    global_settings(&[AppSettings::ColoredHelp]),
+    about = env!("CARGO_PKG_DESCRIPTION"))
+]
 pub struct Opt {
     /// File to read
     #[structopt(name = "FILE")]
