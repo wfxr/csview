@@ -21,9 +21,9 @@
 ### Features
 
 * Correctly handles CJK characters and emoji.
-* *High* performance (see [benchmarks](#benchmark) below).
+* Small, exquisite and *fast* (see [benchmarks](#benchmark) below).
 * Support different styles.
-* Support `tsv` (and custom delimiter).
+* Support `tsv` and custom delimiters.
 * Able to generate markdown table (with `--style markdown` option).
 
 ### Usage
@@ -136,6 +136,12 @@ Or do it in place:
 ```
 $ iconv -f iso-8859-1 -t UTF8//TRANSLIT a.csv | csview
 ```
+
+### Credits
+
+* [csv-rust](https://github.com/BurntSushi/rust-csv)
+* [prettytable-rs](https://github.com/phsym/prettytable-rs)
+* [structopt](https://github.com/TeXitoi/structopt)
 
 ### License
 
