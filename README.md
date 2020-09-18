@@ -91,6 +91,44 @@ Summary
   461.25 ± 109.34 times faster than 'csvlook action.csv'
 ```
 
+### F.A.Q.
+
+---
+#### We already have [xsv](https://github.com/BurntSushi/xsv), why not contribute to it but build a new tool?
+
+`xsv` is an awesome csv tookit. It's aimed for analyzing and manipulating csv data.
+`csview` is designed for formatting and viewing. Their relationship is like `awk` and `column`.
+
+The author of `xsv` may have the similar views with me: https://github.com/BurntSushi/xsv/issues/156
+
+---
+#### Things look weird if the width of table is more than the width of terminal window.
+
+Use pager less with -S option: `csview a.csv | less -S` so you can scroll screen horizontally.
+Or use [xsv](https://github.com/BurntSushi/xsv) to filter out the columns you don't care then piped to csview.
+
+---
+#### I encountered UTF-8 related errors, how to solve it?
+
+The file may use a non-UTF8 encoding. You can check the file encoding using `file` command:
+
+```
+$ file -i a.csv
+a.csv: application/csv; charset=iso-8859-1
+```
+And then convert it to `utf8`:
+
+```
+$ iconv -f iso-8859-1 -t UTF8//TRANSLIT a.csv -o b.csv
+$ csview b.csv
+```
+
+Or do it in place:
+
+```
+$ iconv -f iso-8859-1 -t UTF8//TRANSLIT a.csv | csview
+```
+
 ### License
 
 `csview` is distributed under the terms of both the MIT License and the Apache License 2.0.
