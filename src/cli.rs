@@ -51,5 +51,6 @@ arg_enum! {
         Sharp,
         Rounded,
         Reinforced,
+        Markdown,
     }
 }

@@ -17,7 +17,7 @@ _csview() {
     _arguments "${_arguments_options[@]}" \
 '-d+[Specify the field delimiter]' \
 '--delimiter=[Specify the field delimiter]' \
-'--style=[Specify the border style]: :(None Ascii Sharp Rounded Reinforced)' \
+'--style=[Specify the border style]: :(None Ascii Sharp Rounded Reinforced Markdown)' \
 '-H[Specify that the input has no header row]' \
 '--no-headers[Specify that the input has no header row]' \
 '-t[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
@@ -26,7 +26,7 @@ _csview() {
 '--help[Prints help information]' \
 '-V[Prints version information]' \
 '--version[Prints version information]' \
-'::FIEL -- File to read:_files' \
+'::FILE -- File to read:_files' \
 ":: :_csview_commands" \
 "*::: :->csview" \
 && ret=0

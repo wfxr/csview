@@ -26,7 +26,7 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts=" -H -t -h -V -d  --no-headers --tsv --help --version --delimiter --style  <FIEL>  completion help"
+            opts=" -H -t -h -V -d  --no-headers --tsv --help --version --delimiter --style  <FILE>  completion help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -42,7 +42,7 @@ _csview() {
                     return 0
                     ;;
                 --style)
-                    COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced Markdown" -- "${cur}"))
                     return 0
                     ;;
                 *)

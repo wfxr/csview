@@ -30,6 +30,12 @@ impl From<Border> for format::TableFormat {
                 .separators(&[LinePosition::Bottom], LineSeparator::new('─', '┴', '┗', '┛'))
                 .padding(1, 1)
                 .build(),
+            Border::Markdown => FormatBuilder::new()
+                .column_separator('|')
+                .borders('|')
+                .separators(&[LinePosition::Title], LineSeparator::new('-', '|', '|', '|'))
+                .padding(1, 1)
+                .build(),
         }
     }
 }
