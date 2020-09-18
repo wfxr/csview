@@ -18,6 +18,14 @@
 
 <img src="https://raw.githubusercontent.com/wfxr/i/master/csview-screenshot.png" />
 
+### Features
+
+* Correctly handles CJK characters and emoji.
+* *High* performance (see [benchmarks](#benchmark) below).
+* Support different styles.
+* Support `tsv` (and custom delimiter).
+* Able to generate markdown table (with `--style markdown` option).
+
 ### Usage
 ```
 $ cat example.csv
