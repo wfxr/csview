@@ -16,6 +16,7 @@
     - [ ] Others:
 
 ## Version
-<!-- get by run `csview --version` -->
+
+<!-- get by running `csview --version` -->
 
 ## Problem / Steps to reproduce
