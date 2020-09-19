@@ -7,7 +7,7 @@ pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char, s
         .delimiter(delimiter as u8)
         .has_headers(has_headers)
         .from_reader(reader);
-    let mut table = Table::init(csv_reader.records().map(|record| record_to_row(record)).collect());
+    let mut table = Table::init(csv_reader.records().map(record_to_row).collect());
 
     if has_headers {
         table.set_titles(record_to_row(csv_reader.headers().map(|r| r.to_owned())));

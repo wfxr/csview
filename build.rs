@@ -7,7 +7,7 @@ include!("src/cli.rs");
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let outdir = std::env::var_os("SHELL_COMPLETIONS_DIR")
-        .or(std::env::var_os("OUT_DIR"))
+        .or_else(|| std::env::var_os("OUT_DIR"))
         .expect("OUT_DIR not found");
     let outdir_path = Path::new(&outdir);
     let mut app = Opt::clap();
