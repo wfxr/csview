@@ -10,12 +10,6 @@ repos:
   - id: check-added-large-files
   - id: mixed-line-ending
   - id: check-toml
-- repo: https://github.com/doublify/pre-commit-rust
-  rev: master
-  hooks:
-  - id: fmt
-  - id: cargo-check
-  - id: clippy
 - repo: local
   hooks:
   - id: cargo-fmt
