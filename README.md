@@ -64,6 +64,24 @@ $ head -n10 /etc/passwd | csview --no-headers -d:
 
 Run `csview --help` to view detailed usage.
 
+### Installation
+
+#### From binaries
+
+Prebuilt versions of `csview` for various architectures are available at [Github release page](https://github.com/wfxr/csview/releases).
+
+*Note that you can try the `musl` version (which is statically-linked) if runs into dependency related errors.*
+
+#### From source
+
+`csview` is also published on [crates.io](https://crates.io). If you have Rust toolchains (1.40 or above) installed you can use `cargo` to install it from source:
+
+```
+cargo install --locked csview
+```
+
+If you want the latest version, clone this repository and run `cargo build --release`.
+
 ### Benchmark
 
 Compared with `csvlook` provided by [csvkit](https://github.com/wireservice/csvkit/tree/1.0.5):
