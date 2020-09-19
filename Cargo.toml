@@ -27,6 +27,7 @@ nix = "0.18"
 csv = "1.1"
 prettytable-rs = "^0.8"
 structopt = { version = "0.3", features = ["wrap_help"] }
+exitcode = "1"
 
 [profile.release]
 lto = true

@@ -1,6 +1,7 @@
 use csv::{self, ErrorKind, ReaderBuilder, StringRecord};
 use prettytable::{format, Cell, Row, Table};
 use std::io::BufRead;
+use std::process;
 
 pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char, style: format::TableFormat) {
     let csv_reader = &mut ReaderBuilder::new()
@@ -21,17 +22,12 @@ fn record_to_row(record: csv::Result<StringRecord>) -> Row {
         Ok(record) => Row::new(record.into_iter().map(|cell| Cell::new(&cell)).collect()),
         Err(error) => match error.kind() {
             ErrorKind::Utf8 { .. } => {
-                eprintln!("[error] input is non-utf8 encoding");
-                std::process::exit(1)
+                eprintln!("[error] input is not utf8 encoded");
+                process::exit(exitcode::DATAERR)
             }
             ErrorKind::UnequalLengths { pos, expected_len, len } => {
-                let pos_info = if let Some(pos) = pos {
-                    format!(
-                        " at (byte: {}, line: {}, record: {})",
-                        pos.byte(),
-                        pos.line(),
-                        pos.record()
-                    )
+                let pos_info = if let Some(p) = pos {
+                    format!(" at (byte: {}, line: {}, record: {})", p.byte(), p.line(), p.record())
                 } else {
                     "".to_string()
                 };
@@ -39,11 +35,15 @@ fn record_to_row(record: csv::Result<StringRecord>) -> Row {
                     "[error] unequal lengths{}: expected length is {}, but got {}",
                     pos_info, expected_len, len
                 );
-                std::process::exit(2)
+                process::exit(exitcode::DATAERR)
+            }
+            ErrorKind::Io(e) => {
+                eprintln!("[error] io error: {}", e);
+                process::exit(exitcode::IOERR)
             }
             e => {
-                eprintln!("[error] failed to reading rows: {:?}", e);
-                std::process::exit(3)
+                eprintln!("[error] failed to process input: {:?}", e);
+                process::exit(exitcode::SOFTWARE)
             }
         },
     }
