@@ -20,8 +20,8 @@
 
 ### Features
 
+* Small and *fast* (see [benchmarks](#benchmark) below).
 * Correctly handles CJK characters and emoji.
-* Small, exquisite and *fast* (see [benchmarks](#benchmark) below).
 * Support different styles.
 * Support `tsv` and custom delimiters.
 * Able to generate markdown table (with `--style markdown` option).
@@ -38,7 +38,7 @@ air, moon roof, loaded",4799.00
 
 $ csview example.csv
 +------+-------+----------------------------------------+------------------------+---------+
-| Year | Make  | Model                                  | Description            | Price   |
+| Year | Make | Model | Description | Price |
 +------+-------+----------------------------------------+------------------------+---------+
 | 1997 | Ford  | E350                                   | ac, abs, moon          | 3000.00 |
 | 1999 | Chevy | Venture "Extended Edition"             |                        | 4900.00 |
