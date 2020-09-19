@@ -66,6 +66,14 @@ Run `csview --help` to view detailed usage.
 
 ### Installation
 
+#### Arch Linux
+
+`csview` is available in the Arch User Repository. To install it from [AUR](https://aur.archlinux.org/packages/csview):
+
+```
+yay -S csview
+```
+
 #### From binaries
 
 Prebuilt versions of `csview` for various architectures are available at [Github release page](https://github.com/wfxr/csview/releases).
