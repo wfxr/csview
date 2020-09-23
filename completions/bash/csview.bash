@@ -42,7 +42,7 @@ _csview() {
                     return 0
                     ;;
                 --style)
-                    COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced Markdown" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced Markdown Grid" -- "${cur}"))
                     return 0
                     ;;
                 *)

@@ -1,5 +1,5 @@
 complete -c csview -n "__fish_use_subcommand" -s d -l delimiter -d 'Specify the field delimiter'
-complete -c csview -n "__fish_use_subcommand" -l style -d 'Specify the border style' -r -f -a "None Ascii Sharp Rounded Reinforced Markdown"
+complete -c csview -n "__fish_use_subcommand" -l style -d 'Specify the border style' -r -f -a "None Ascii Sharp Rounded Reinforced Markdown Grid"
 complete -c csview -n "__fish_use_subcommand" -s H -l no-headers -d 'Specify that the input has no header row'
 complete -c csview -n "__fish_use_subcommand" -s t -l tsv -d 'Use \'\\t\' as delimiter for tsv, overrides \'-d\' option'
 complete -c csview -n "__fish_use_subcommand" -s h -l help -d 'Prints help information'

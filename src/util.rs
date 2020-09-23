@@ -36,6 +36,7 @@ impl From<Border> for format::TableFormat {
                 .separators(&[LinePosition::Title], LineSeparator::new('-', '|', '|', '|'))
                 .padding(1, 1)
                 .build(),
+            Border::Grid => *format::consts::FORMAT_BOX_CHARS,
         }
     }
 }

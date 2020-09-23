@@ -55,5 +55,6 @@ arg_enum! {
         Rounded,
         Reinforced,
         Markdown,
+        Grid,
     }
 }
