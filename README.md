@@ -83,9 +83,16 @@ brew tap wfxr/csview
 brew install csview
 ```
 
+#### On Windows
+
+You can install `csview` with [Scoop](https://scoop.sh/):
+```
+scoop install csview
+```
+
 #### From binaries
 
-Prebuilt versions of `csview` for various architectures are available at [Github release page](https://github.com/wfxr/csview/releases).
+Pre-built versions of `csview` for various architectures are available at [Github release page](https://github.com/wfxr/csview/releases).
 
 *Note that you can try the `musl` version (which is statically-linked) if runs into dependency related errors.*
 
