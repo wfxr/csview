@@ -30,6 +30,7 @@ repos:
     language: system
     always_run: true
     entry: cargo clippy
+    args: ["--", "-D", "warnings"]
   - id: update-completions
     name: update shell completions
     pass_filenames: false
