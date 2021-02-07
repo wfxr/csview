@@ -3,7 +3,7 @@ use prettytable::{format, Cell, Row, Table};
 use std::io::BufRead;
 use std::process;
 
-pub fn print_csv(reader: Box<dyn BufRead>, has_headers: bool, delimiter: char, style: format::TableFormat) {
+pub fn print_csv(reader: impl BufRead, has_headers: bool, delimiter: char, style: format::TableFormat) {
     let csv_reader = &mut ReaderBuilder::new()
         .delimiter(delimiter as u8)
         .has_headers(has_headers)
