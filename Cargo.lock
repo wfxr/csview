@@ -154,7 +154,7 @@ dependencies = [
 
 [[package]]
 name = "csview"
-version = "0.3.6-rc.0"
+version = "0.3.6"
 dependencies = [
  "csv",
  "exitcode",
