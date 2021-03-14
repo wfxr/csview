@@ -1,12 +1,23 @@
 mod cli;
 mod core;
-mod util;
+mod style;
 use cli::{CompletionOpt, Opt, StructOpt, Subcommand};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    util::reset_signal_pipe_handler();
+fn main() {
+    if let Err(e) = try_main() {
+        if let Some(ioerr) = e.root_cause().downcast_ref::<io::Error>() {
+            if ioerr.kind() == io::ErrorKind::BrokenPipe {
+                std::process::exit(0);
+            }
+        }
+        eprintln!("{}: {}", env!("CARGO_PKG_NAME"), e);
+        std::process::exit(1)
+    }
+}
+
+fn try_main() -> anyhow::Result<()> {
     let opt: Opt = Opt::from_args();
     match opt.subcommand {
         Some(Subcommand::Completion(CompletionOpt { shell })) => {

@@ -13,25 +13,21 @@ keywords = [
 ]
 readme = "README.md"
 license = "MIT/Apache-2.0"
-exclude = [
-    "/completions"
-]
+exclude = ["/completions"]
 repository = "https://github.com/wfxr/csview"
 edition = "2018"
 build = "build.rs"
 
-[target.'cfg(target_family = "unix")'.dependencies]
-nix = "0.18"
-
 [dependencies]
-csv = "1.1"
+csv = "^1.1.6"
 prettytable-rs = "^0.8"
-structopt = { version = "0.3", features = ["wrap_help"] }
-exitcode = "1"
+structopt = { version = "^0.3.21", features = ["wrap_help"] }
+exitcode = "^1.1.2"
+anyhow = "^1.0.38"
+
+[build-dependencies]
+structopt = "^0.3.21"
 
 [profile.release]
 lto = true
 codegen-units = 1
-
-[build-dependencies]
-structopt = "0.3"
