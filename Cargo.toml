@@ -22,7 +22,7 @@ build = "build.rs"
 csv = "^1.1.6"
 structopt = { version = "^0.3.21", features = ["wrap_help"] }
 exitcode = "^1.1.2"
-anyhow = "^1.0.39"
+anyhow = "^1.0.40"
 
 # https://github.com/phsym/prettytable-rs/pull/114
 [dependencies.prettytable-rs]
