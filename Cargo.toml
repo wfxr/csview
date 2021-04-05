@@ -22,13 +22,8 @@ build = "build.rs"
 csv = "^1.1.6"
 structopt = { version = "^0.3.21", features = ["wrap_help"] }
 exitcode = "^1.1.2"
-anyhow = "^1.0.40"
-
-# https://github.com/phsym/prettytable-rs/pull/114
-[dependencies.prettytable-rs]
-git = "https://github.com/phsym/prettytable-rs"
-rev = "cf7dca33e2e2131c20e4bbc34ad222c5e6edc29a"
-version = "^0.8"
+anyhow = "^1.0.38"
+prettytable-rs = "^0.8"
 
 [build-dependencies]
 structopt = "^0.3.21"
@@ -36,3 +31,6 @@ structopt = "^0.3.21"
 [profile.release]
 lto = true
 codegen-units = 1
+
+[patch.crates-io]
+prettytable-rs = { git = "https://github.com/wfxr/prettytable-rs" }
