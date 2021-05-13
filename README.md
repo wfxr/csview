@@ -83,6 +83,21 @@ brew tap wfxr/csview
 brew install csview
 ```
 
+#### On NetBSD
+
+`csview` is available from the main pkgsrc Repositories. To install simply run
+
+```
+pkgin install csview
+```
+
+or, if you prefer to build from source using [pkgsrc](https://pkgsrc.se/textproc/csview) on any of the supported platforms:
+
+```
+cd /usr/pkgsrc/textproc/csview
+make install
+```
+
 #### On Windows
 
 You can install `csview` with [Scoop](https://scoop.sh/):
