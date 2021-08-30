@@ -20,13 +20,13 @@ build = "build.rs"
 
 [dependencies]
 csv = "^1.1.6"
-structopt = { version = "^0.3.22", features = ["wrap_help"] }
+structopt = { version = "^0.3.23", features = ["wrap_help"] }
 exitcode = "^1.1.2"
 anyhow = "^1.0.43"
 prettytable-rs = "^0.8"
 
 [build-dependencies]
-structopt = "^0.3.22"
+structopt = "^0.3.23"
 
 [profile.release]
 lto = true
