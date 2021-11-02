@@ -22,7 +22,7 @@ build = "build.rs"
 csv = "^1.1.6"
 structopt = { version = "^0.3.23", features = ["wrap_help"] }
 exitcode = "^1.1.2"
-anyhow = "^1.0.44"
+anyhow = "^1.0.45"
 prettytable-rs = "^0.8"
 
 [build-dependencies]
