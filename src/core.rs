@@ -28,5 +28,5 @@ pub fn print(
 }
 
 fn record_to_row(record: &StringRecord) -> Row {
-    Row::new(record.iter().map(|cell| Cell::new(cell)).collect())
+    Row::new(record.iter().map(Cell::new).collect())
 }
