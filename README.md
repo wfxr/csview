@@ -161,7 +161,7 @@ Summary
 ---
 #### We already have [xsv](https://github.com/BurntSushi/xsv), why not contribute to it but build a new tool?
 
-`xsv` is an awesome csv tookit. It's aimed for analyzing and manipulating csv data.
+`xsv` is an awesome csv toolkit. It's aimed for analyzing and manipulating csv data.
 `csview` is designed for formatting and viewing. Their relationship is like `awk` and `column`.
 
 The author of `xsv` may have the similar views with me: https://github.com/BurntSushi/xsv/issues/156
