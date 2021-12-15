@@ -162,9 +162,7 @@ Summary
 #### We already have [xsv](https://github.com/BurntSushi/xsv), why not contribute to it but build a new tool?
 
 `xsv` is an awesome csv toolkit. It's aimed for analyzing and manipulating csv data.
-`csview` is designed for formatting and viewing. Their relationship is like `awk` and `column`.
-
-The author of `xsv` may have the similar views with me: https://github.com/BurntSushi/xsv/issues/156
+`csview` is designed for formatting and viewing. See also: [xsv/issues/156](https://github.com/BurntSushi/xsv/issues/156)
 
 ---
 #### Things look weird if the width of table is more than the width of terminal window.
