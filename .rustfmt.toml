@@ -1,0 +1,12 @@
+edition = "2021"
+struct_field_align_threshold = 40
+max_width = 120
+comment_width = 120
+reorder_imports = true
+fn_single_line = false
+imports_layout = "HorizontalVertical"
+match_arm_blocks = false
+overflow_delimited_expr = true
+imports_granularity = "Crate"
+struct_lit_width = 60
+struct_variant_width = 60

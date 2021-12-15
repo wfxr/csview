@@ -3,9 +3,11 @@ mod core;
 mod style;
 use cli::{CompletionOpt, Opt, StructOpt, Subcommand};
 use csv::ErrorKind;
-use std::fs::File;
-use std::io::{self, BufRead, BufReader};
-use std::process;
+use std::{
+    fs::File,
+    io::{self, BufRead, BufReader},
+    process,
+};
 
 fn main() {
     if let Err(e) = try_main() {
