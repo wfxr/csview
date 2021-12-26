@@ -15,18 +15,18 @@ _csview() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \
-'-d+[Specify the field delimiter]' \
-'--delimiter=[Specify the field delimiter]' \
-'--style=[Specify the border style]: :(None Ascii Sharp Rounded Reinforced Markdown Grid)' \
+'-d+[Specify the field delimiter]:DELIMITER: ' \
+'--delimiter=[Specify the field delimiter]:DELIMITER: ' \
+'--style=[Specify the border style]:BORDER:(None Ascii Sharp Rounded Reinforced Markdown Grid)' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-V[Print version information]' \
+'--version[Print version information]' \
 '-H[Specify that the input has no header row]' \
 '--no-headers[Specify that the input has no header row]' \
-'-t[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
-'--tsv[Use '\''\\t'\'' as delimiter for tsv, overrides '\''-d'\'' option]' \
-'-h[Prints help information]' \
-'--help[Prints help information]' \
-'-V[Prints version information]' \
-'--version[Prints version information]' \
-'::FILE -- File to read:_files' \
+'(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
+'(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
+'::FILE -- File to read:' \
 ":: :_csview_commands" \
 "*::: :->csview" \
 && ret=0
@@ -38,19 +38,9 @@ _csview() {
         case $line[2] in
             (completion)
 _arguments "${_arguments_options[@]}" \
-'-h[Prints help information]' \
-'--help[Prints help information]' \
-'-V[Prints version information]' \
-'--version[Prints version information]' \
-':shell -- Target shell name:(zsh bash fish powershell elvish)' \
-&& ret=0
-;;
-(help)
-_arguments "${_arguments_options[@]}" \
-'-h[Prints help information]' \
-'--help[Prints help information]' \
-'-V[Prints version information]' \
-'--version[Prints version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+':shell -- Target shell name:(bash elvish fish powershell zsh)' \
 && ret=0
 ;;
         esac
@@ -61,24 +51,14 @@ esac
 (( $+functions[_csview_commands] )) ||
 _csview_commands() {
     local commands; commands=(
-        "completion:Generate shell completion file" \
-"help:Prints this message or the help of the given subcommand(s)" \
+'completion:Generate shell completion file' \
     )
     _describe -t commands 'csview commands' commands "$@"
 }
 (( $+functions[_csview__completion_commands] )) ||
 _csview__completion_commands() {
-    local commands; commands=(
-        
-    )
+    local commands; commands=()
     _describe -t commands 'csview completion commands' commands "$@"
-}
-(( $+functions[_csview__help_commands] )) ||
-_csview__help_commands() {
-    local commands; commands=(
-        
-    )
-    _describe -t commands 'csview help commands' commands "$@"
 }
 
 _csview "$@"

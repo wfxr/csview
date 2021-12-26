@@ -9,15 +9,11 @@ _csview() {
     for i in ${COMP_WORDS[@]}
     do
         case "${i}" in
-            csview)
+            "$1")
                 cmd="csview"
                 ;;
-            
             completion)
                 cmd+="__completion"
-                ;;
-            help)
-                cmd+="__help"
                 ;;
             *)
                 ;;
@@ -26,18 +22,17 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts=" -H -t -h -V -d  --no-headers --tsv --help --version --delimiter --style  <FILE>  completion help"
+            opts="-h -V -H -t -d --help --version --no-headers --tsv --delimiter --style <FILE> completion"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi
             case "${prev}" in
-                
                 --delimiter)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                    -d)
+                -d)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
@@ -52,30 +47,13 @@ _csview() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        
         csview__completion)
-            opts=" -h -V  --help --version  <shell> "
+            opts="-h --help bash elvish fish powershell zsh"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi
             case "${prev}" in
-                
-                *)
-                    COMPREPLY=()
-                    ;;
-            esac
-            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-            return 0
-            ;;
-        csview__help)
-            opts=" -h -V  --help --version  "
-            if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
-                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-                return 0
-            fi
-            case "${prev}" in
-                
                 *)
                     COMPREPLY=()
                     ;;

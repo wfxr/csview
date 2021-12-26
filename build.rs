@@ -1,5 +1,5 @@
-use std::{fs, path::Path, str::FromStr};
-use structopt::clap::Shell;
+use clap::{ArgEnum, IntoApp};
+use std::{fs, path::Path};
 
 include!("src/cli.rs");
 
@@ -8,12 +8,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .or_else(|| std::env::var_os("OUT_DIR"))
         .expect("OUT_DIR not found");
     let outdir_path = Path::new(&outdir);
-    let mut app = Opt::clap();
+    let app = &mut App::into_app();
 
-    for shell in &Shell::variants() {
-        let dir = outdir_path.join(shell);
+    for shell in Shell::value_variants() {
+        let dir = outdir_path.join(shell.to_string());
         fs::create_dir_all(&dir)?;
-        app.gen_completions(env!("CARGO_PKG_NAME"), Shell::from_str(shell)?, &dir);
+        clap_generate::generate_to(*shell, app, app.get_name().to_string(), &dir)?;
     }
     Ok(())
 }

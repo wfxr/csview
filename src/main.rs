@@ -1,7 +1,8 @@
 mod cli;
 mod core;
 mod style;
-use cli::{CompletionOpt, Opt, StructOpt, Subcommand};
+use clap::{IntoApp, Parser};
+use cli::{App, Subcommand};
 use csv::ErrorKind;
 use std::{
     fs::File,
@@ -51,18 +52,19 @@ fn main() {
 }
 
 fn try_main() -> anyhow::Result<()> {
-    let opt: Opt = Opt::from_args();
-    match opt.subcommand {
-        Some(Subcommand::Completion(CompletionOpt { shell })) => {
-            Opt::clap().gen_completions_to(env!("CARGO_PKG_NAME"), shell, &mut std::io::stdout());
+    let app: App = App::parse();
+    match app.subcommand {
+        Some(Subcommand::Completion { shell }) => {
+            let app = &mut App::into_app();
+            clap_generate::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
         None => {
-            let reader: Box<dyn BufRead> = match opt.file {
+            let reader: Box<dyn BufRead> = match app.file {
                 Some(path) => Box::new(BufReader::new(File::open(path)?)),
                 None => Box::new(BufReader::new(io::stdin())),
             };
-            let delimiter = if opt.tsv { '\t' } else { opt.delimiter };
-            core::print(reader, !opt.no_headers, delimiter, opt.border.into())?;
+            let delimiter = if app.tsv { '\t' } else { app.delimiter };
+            core::print(reader, !app.no_headers, delimiter, app.border.into())?;
         }
     }
     Ok(())

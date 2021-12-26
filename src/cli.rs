@@ -1,60 +1,57 @@
 use std::path::PathBuf;
 
-use structopt::clap::{self, arg_enum, AppSettings};
-pub use structopt::StructOpt;
+use clap::{AppSettings, Parser};
+use clap_generate::Shell;
+use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 
-#[derive(StructOpt)]
-#[structopt(
-    global_settings(&[AppSettings::ColoredHelp]),
-    about = env!("CARGO_PKG_DESCRIPTION"))
-]
-pub struct Opt {
+#[derive(Parser)]
+#[clap(about, version)]
+#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
+#[clap(global_setting(AppSettings::DisableHelpSubcommand))]
+pub struct App {
     /// File to read
-    #[structopt(name = "FILE")]
+    #[clap(name = "FILE")]
     pub file: Option<PathBuf>,
 
     /// Specify that the input has no header row.
-    #[structopt(short = "H", long = "no-headers")]
+    #[clap(short = 'H', long = "no-headers")]
     pub no_headers: bool,
 
-    /// Use '\t' as delimiter for tsv, overrides '-d' option
-    #[structopt(short = "t", long = "tsv")]
+    /// Use '\t' as delimiter for tsv
+    #[clap(short = 't', long = "tsv", conflicts_with = "delimiter")]
     pub tsv: bool,
 
     /// Specify the field delimiter
-    #[structopt(short = "d", long = "delimiter", default_value = ",")]
+    #[clap(short = 'd', long = "delimiter", default_value = ",")]
     pub delimiter: char,
 
     /// Specify the border style
-    #[structopt(long = "style", default_value = "Ascii", possible_values = &Border::variants(), case_insensitive = true)]
+    #[clap(long = "style", default_value = Border::VARIANTS[1], possible_values = Border::VARIANTS, ignore_case = true)]
     pub border: Border,
 
     /// Subcommand
-    #[structopt(subcommand)]
+    #[clap(subcommand)]
     pub subcommand: Option<Subcommand>,
 }
 
-#[derive(StructOpt)]
+#[derive(Parser)]
 pub enum Subcommand {
     /// Generate shell completion file
-    Completion(CompletionOpt),
+    Completion {
+        /// Target shell name
+        #[clap(arg_enum)]
+        shell: Shell,
+    },
 }
 
-#[derive(StructOpt)]
-pub struct CompletionOpt {
-    /// Target shell name
-    #[structopt(possible_values = &clap::Shell::variants())]
-    pub shell: clap::Shell,
-}
-
-arg_enum! {
-    pub enum Border {
-        None,
-        Ascii,
-        Sharp,
-        Rounded,
-        Reinforced,
-        Markdown,
-        Grid,
-    }
+#[derive(Display, EnumString, EnumVariantNames, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[strum(ascii_case_insensitive)]
+pub enum Border {
+    None,
+    Ascii,
+    Sharp,
+    Rounded,
+    Reinforced,
+    Markdown,
+    Grid,
 }
