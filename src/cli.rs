@@ -26,7 +26,7 @@ pub struct App {
     pub delimiter: char,
 
     /// Specify the border style
-    #[clap(long = "style", default_value = Border::VARIANTS[1], possible_values = Border::VARIANTS, ignore_case = true)]
+    #[clap(long = "style", default_value = Border::VARIANTS[1], possible_values = Border::VARIANTS)]
     pub border: Border,
 
     /// Subcommand
