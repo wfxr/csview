@@ -119,7 +119,7 @@ dependencies = [
 
 [[package]]
 name = "csview"
-version = "0.3.12-dev"
+version = "0.3.12"
 dependencies = [
  "anyhow",
  "clap",
