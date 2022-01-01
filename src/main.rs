@@ -1,7 +1,6 @@
 mod cli;
 mod core;
 mod style;
-
 use clap::{IntoApp, Parser};
 use cli::{App, Subcommand};
 use csv::ErrorKind;
