@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{AppSettings, Parser};
-use clap_generate::Shell;
+use clap_complete::Shell;
 use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 
 #[derive(Parser)]

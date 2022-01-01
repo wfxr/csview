@@ -56,7 +56,7 @@ fn try_main() -> anyhow::Result<()> {
     match app.subcommand {
         Some(Subcommand::Completion { shell }) => {
             let app = &mut App::into_app();
-            clap_generate::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
+            clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
         None => {
             let reader: Box<dyn BufRead> = match app.file {

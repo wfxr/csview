@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for shell in Shell::value_variants() {
         let dir = outdir_path.join(shell.to_string());
         fs::create_dir_all(&dir)?;
-        clap_generate::generate_to(*shell, app, app.get_name().to_string(), &dir)?;
+        clap_complete::generate_to(*shell, app, app.get_name().to_string(), &dir)?;
     }
     Ok(())
 }
