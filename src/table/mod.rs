@@ -9,7 +9,7 @@ use row::Row;
 use std::io::{self, Write};
 use unicode_width::UnicodeWidthStr;
 
-pub use style::{RowPos, RowSep, TableStyle, TableStyleBuilder};
+pub use style::{RowSep, TableStyle, TableStyleBuilder};
 
 pub struct CsvTableWriter {
     pub(crate) header:  Option<StringRecord>,
@@ -27,7 +27,7 @@ impl CsvTableWriter {
 
     pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &TableStyle) -> Result<()> {
         let widths = &self.widths;
-        fmt.write_row_sep(wtr, widths, RowPos::Top)?;
+        fmt.write_row_sep(wtr, widths, fmt.rowseps.top.as_ref())?;
 
         let mut iter = self.records.peekable();
 
@@ -35,7 +35,7 @@ impl CsvTableWriter {
             let row: Row = header.into_iter().collect();
             row.writeln(wtr, fmt, widths)?;
             if iter.peek().is_some() {
-                fmt.write_row_sep(wtr, widths, RowPos::Snd)?;
+                fmt.write_row_sep(wtr, widths, fmt.rowseps.snd.as_ref())?;
             }
         }
 
@@ -43,11 +43,11 @@ impl CsvTableWriter {
             let row: Row = record.into_iter().collect();
             row.writeln(wtr, fmt, widths)?;
             if iter.peek().is_some() {
-                fmt.write_row_sep(wtr, widths, RowPos::Mid)?;
+                fmt.write_row_sep(wtr, widths, fmt.rowseps.mid.as_ref())?;
             }
         }
 
-        fmt.write_row_sep(wtr, widths, RowPos::Bot)?;
+        fmt.write_row_sep(wtr, widths, fmt.rowseps.bot.as_ref())?;
         wtr.flush()?;
         Ok(())
     }

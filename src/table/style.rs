@@ -1,35 +1,34 @@
 use anyhow::Result;
 use std::io::Write;
 
-/// Position of row separator
 #[derive(Debug, Clone, Copy)]
-pub enum RowPos {
+pub struct RowSeps {
     /// Top separator row (top border)
     /// ```
     /// >┌───┬───┐
     ///  │ a │ b │
     /// ```
-    Top,
+    pub top: Option<RowSep>,
     /// Second separator row (between the header row and the first data row)
     /// ```
     ///  ┌───┬───┐
     ///  │ a │ b │
     /// >├───┼───┤
     /// ```
-    Snd,
+    pub snd: Option<RowSep>,
     /// Middle separator row (between data rows)
     /// ```
     /// >├───┼───┤
     ///  │ 2 │ 2 │
     /// >├───┼───┤
     /// ```
-    Mid,
+    pub mid: Option<RowSep>,
     /// Bottom separator row (bottom border)
     /// ```
     ///  │ 3 │ 3 │
     /// >└───┴───┘
     /// ```
-    Bot,
+    pub bot: Option<RowSep>,
 }
 
 /// The characters used for printing a row separator
@@ -62,47 +61,24 @@ pub struct RowSep {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct RowSeps {
-    /// Optional top line separator
-    pub top: Option<RowSep>,
-    /// Optional title line separator
-    pub snd: Option<RowSep>,
-    /// Optional internal row separator
-    pub mid: Option<RowSep>,
-    /// Optional bottom line separator
-    pub bot: Option<RowSep>,
-}
-
-/// Position of column separator
-#[derive(Debug, Clone, Copy)]
-pub enum ColPos {
+pub struct ColSeps {
     /// Left separator column (left border)
     /// ```
     ///  │ 1 │ 2 │
     ///  ^
     /// ```
-    Lhs,
+    pub lhs: Option<char>,
     /// Middle column separators
     /// ```
     ///  │ 1 │ 2 │
     ///      ^
     /// ```
-    Mid,
+    pub mid: Option<char>,
     /// Right separator column (right border)
     /// ```
     ///  │ 1 │ 2 │
     ///          ^
     /// ```
-    Rhs,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub struct ColSeps {
-    /// Optional left border character
-    pub lhs: Option<char>,
-    /// Optional inner column separator character
-    pub mid: Option<char>,
-    /// Optional right border character
     pub rhs: Option<char>,
 }
 
@@ -162,29 +138,9 @@ impl Default for TableStyle {
 }
 
 impl TableStyle {
-    fn get_row_sep(&self, pos: RowPos) -> &Option<RowSep> {
-        match pos {
-            RowPos::Mid => &self.rowseps.mid,
-            RowPos::Top => &self.rowseps.top,
-            RowPos::Bot => &self.rowseps.bot,
-            RowPos::Snd => match &self.rowseps.snd {
-                s @ &Some(_) => s,
-                &None => &self.rowseps.mid,
-            },
-        }
-    }
-
-    pub fn get_col_sep(&self, pos: ColPos) -> Option<char> {
-        match pos {
-            ColPos::Lhs => self.colseps.lhs,
-            ColPos::Mid => self.colseps.mid,
-            ColPos::Rhs => self.colseps.rhs,
-        }
-    }
-
-    pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], pos: RowPos) -> Result<usize> {
-        match *self.get_row_sep(pos) {
-            Some(ref row) => {
+    pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: Option<&RowSep>) -> Result<()> {
+        match sep {
+            Some(row) => {
                 write!(wtr, "{:indent$}", "", indent = self.indent)?;
                 if self.colseps.lhs.is_some() {
                     write!(wtr, "{}", row.ljunc)?;
@@ -202,14 +158,14 @@ impl TableStyle {
                     write!(wtr, "{}", row.rjunc)?;
                 }
                 writeln!(wtr)?;
-                Ok(1)
+                Ok(())
             }
-            None => Ok(0),
+            None => Ok(()),
         }
     }
 
-    pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, pos: ColPos) -> Result<()> {
-        self.get_col_sep(pos).map(|s| write!(wtr, "{}", s)).transpose()?;
+    pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, sep: Option<&char>) -> Result<()> {
+        sep.map(|s| write!(wtr, "{}", s)).transpose()?;
         Ok(())
     }
 }
@@ -282,7 +238,7 @@ mod test {
     fn test_write_column_separator() -> Result<()> {
         let fmt = TableStyleBuilder::new().col_seps('|', '|', '|').padding(1).build();
         let mut out = Vec::new();
-        fmt.write_col_sep(&mut out, ColPos::Lhs)?;
+        fmt.write_col_sep(&mut out, fmt.colseps.lhs.as_ref())?;
 
         let out = String::from_utf8(out)?;
         assert_eq!("|", out);
@@ -293,7 +249,7 @@ mod test {
     fn test_write_row_separator() -> Result<()> {
         let fmt = TableStyleBuilder::new().indent(4).build();
         let mut out = Vec::new();
-        fmt.write_row_sep(&mut out, &[2, 4, 6], RowPos::Top)?;
+        fmt.write_row_sep(&mut out, &[2, 4, 6], fmt.rowseps.top.as_ref())?;
 
         let out = String::from_utf8(out)?;
         assert_eq!("    +----+------+--------+\n", out);

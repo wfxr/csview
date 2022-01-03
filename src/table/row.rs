@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::Write;
 
-use crate::table::{style::ColPos, Cell, TableStyle};
+use crate::table::{Cell, TableStyle};
 
 /// Represent a table row made of cells
 #[derive(Clone, Debug)]
@@ -17,10 +17,10 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 
 impl<'a> Row<'a> {
     pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &TableStyle, widths: &[usize]) -> Result<()> {
-        let sep = fmt.get_col_sep(ColPos::Mid).map(|c| c.to_string()).unwrap_or_default();
+        let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
 
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
-        fmt.write_col_sep(wtr, ColPos::Lhs)?;
+        fmt.write_col_sep(wtr, fmt.colseps.lhs.as_ref())?;
         self.cells
             .iter()
             .zip(widths)
@@ -28,7 +28,7 @@ impl<'a> Row<'a> {
             .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding))
             .intersperse(sep)
             .try_for_each(|s| write!(wtr, "{}", s))?;
-        fmt.write_col_sep(wtr, ColPos::Rhs)?;
+        fmt.write_col_sep(wtr, fmt.colseps.rhs.as_ref())?;
 
         writeln!(wtr)?;
         Ok(())
