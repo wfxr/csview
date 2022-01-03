@@ -1,13 +1,13 @@
 use crate::{
-    cli::Border,
+    cli::Style,
     table::{RowSep, TableFormat, TableFormatBuilder},
 };
 
-impl From<Border> for TableFormat {
-    fn from(style: Border) -> Self {
+impl From<Style> for TableFormat {
+    fn from(style: Style) -> Self {
         match style {
-            Border::None => TableFormatBuilder::new().clear_seps().build(),
-            Border::Ascii => TableFormatBuilder::new()
+            Style::None => TableFormatBuilder::new().clear_seps().build(),
+            Style::Ascii => TableFormatBuilder::new()
                 .col_sep('|')
                 .row_seps(
                     RowSep::new('-', '+', '+', '+'),
@@ -16,7 +16,7 @@ impl From<Border> for TableFormat {
                     RowSep::new('-', '+', '+', '+'),
                 )
                 .build(),
-            Border::Sharp => TableFormatBuilder::new()
+            Style::Sharp => TableFormatBuilder::new()
                 .col_sep('│')
                 .row_seps(
                     RowSep::new('─', '┌', '┬', '┐'),
@@ -25,7 +25,7 @@ impl From<Border> for TableFormat {
                     RowSep::new('─', '└', '┴', '┘'),
                 )
                 .build(),
-            Border::Rounded => TableFormatBuilder::new()
+            Style::Rounded => TableFormatBuilder::new()
                 .col_sep('│')
                 .row_seps(
                     RowSep::new('─', '╭', '┬', '╮'),
@@ -34,7 +34,7 @@ impl From<Border> for TableFormat {
                     RowSep::new('─', '╰', '┴', '╯'),
                 )
                 .build(),
-            Border::Reinforced => TableFormatBuilder::new()
+            Style::Reinforced => TableFormatBuilder::new()
                 .col_sep('│')
                 .row_seps(
                     RowSep::new('─', '┏', '┬', '┓'),
@@ -43,11 +43,11 @@ impl From<Border> for TableFormat {
                     RowSep::new('─', '┗', '┴', '┛'),
                 )
                 .build(),
-            Border::Markdown => TableFormatBuilder::new()
+            Style::Markdown => TableFormatBuilder::new()
                 .col_sep('|')
                 .row_seps(None, RowSep::new('-', '|', '|', '|'), None, None)
                 .build(),
-            Border::Grid => TableFormatBuilder::new()
+            Style::Grid => TableFormatBuilder::new()
                 .col_sep('│')
                 .row_seps(
                     RowSep::new('─', '┌', '┬', '┐'),

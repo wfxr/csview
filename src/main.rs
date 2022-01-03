@@ -68,7 +68,7 @@ fn try_main() -> anyhow::Result<()> {
                 None => Box::new(BufReader::new(io::stdin())),
             };
             let delimiter = if app.tsv { '\t' } else { app.delimiter };
-            core::print(reader, !app.no_headers, delimiter, app.border.into())?;
+            core::print(reader, !app.no_headers, delimiter, app.style.into())?;
         }
     }
     Ok(())

@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use clap::{AppSettings, Parser};
+use clap::{AppSettings, Parser, ValueHint};
 use clap_complete::Shell;
 use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 
@@ -10,7 +10,7 @@ use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 #[clap(global_setting(AppSettings::DisableHelpSubcommand))]
 pub struct App {
     /// File to read
-    #[clap(name = "FILE")]
+    #[clap(name = "FILE", value_hint = ValueHint::FilePath)]
     pub file: Option<PathBuf>,
 
     /// Specify that the input has no header row.
@@ -18,16 +18,16 @@ pub struct App {
     pub no_headers: bool,
 
     /// Use '\t' as delimiter for tsv
-    #[clap(short = 't', long = "tsv", conflicts_with = "delimiter")]
+    #[clap(short, long, conflicts_with = "delimiter")]
     pub tsv: bool,
 
     /// Specify the field delimiter
-    #[clap(short = 'd', long = "delimiter", default_value = ",")]
+    #[clap(short, long, default_value_t = ',')]
     pub delimiter: char,
 
     /// Specify the border style
-    #[clap(long = "style", default_value = Border::VARIANTS[1], possible_values = Border::VARIANTS, ignore_case = true)]
-    pub border: Border,
+    #[clap(long, default_value = Style::VARIANTS[1], possible_values = Style::VARIANTS, ignore_case = true)]
+    pub style: Style,
 
     /// Subcommand
     #[clap(subcommand)]
@@ -46,7 +46,7 @@ pub enum Subcommand {
 
 #[derive(Display, EnumString, EnumVariantNames, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[strum(ascii_case_insensitive)]
-pub enum Border {
+pub enum Style {
     None,
     Ascii,
     Sharp,
