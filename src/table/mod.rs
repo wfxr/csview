@@ -2,11 +2,10 @@ mod cell;
 mod row;
 mod style;
 
-use anyhow::Result;
 use cell::Cell;
 use csv::{Reader, StringRecord};
 use row::Row;
-use std::io::{self, Write};
+use std::io::{self, Result, Write};
 use unicode_width::UnicodeWidthStr;
 
 pub use style::{RowSep, Style, StyleBuilder};
@@ -27,7 +26,10 @@ impl CsvTableWriter {
 
     pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &Style) -> Result<()> {
         let widths = &self.widths;
-        fmt.write_row_sep(wtr, widths, fmt.rowseps.top.as_ref())?;
+        fmt.rowseps
+            .top
+            .map(|sep| fmt.write_row_sep(wtr, widths, &sep))
+            .transpose()?;
 
         let mut iter = self.records.peekable();
 
@@ -35,21 +37,29 @@ impl CsvTableWriter {
             let row: Row = header.into_iter().collect();
             row.writeln(wtr, fmt, widths)?;
             if iter.peek().is_some() {
-                fmt.write_row_sep(wtr, widths, fmt.rowseps.snd.as_ref())?;
+                fmt.rowseps
+                    .snd
+                    .map(|sep| fmt.write_row_sep(wtr, widths, &sep))
+                    .transpose()?;
             }
         }
 
         while let Some(record) = iter.next().transpose()? {
             let row: Row = record.into_iter().collect();
             row.writeln(wtr, fmt, widths)?;
-            if iter.peek().is_some() {
-                fmt.write_row_sep(wtr, widths, fmt.rowseps.mid.as_ref())?;
+            if let Some(mid) = &fmt.rowseps.mid {
+                if iter.peek().is_some() {
+                    fmt.write_row_sep(wtr, widths, mid)?;
+                }
             }
         }
 
-        fmt.write_row_sep(wtr, widths, fmt.rowseps.bot.as_ref())?;
-        wtr.flush()?;
-        Ok(())
+        fmt.rowseps
+            .bot
+            .map(|sep| fmt.write_row_sep(wtr, widths, &sep))
+            .transpose()?;
+
+        wtr.flush()
     }
 }
 
@@ -85,6 +95,7 @@ fn sniff_widths<R: io::Read>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use anyhow::Result;
     use csv::ReaderBuilder;
 
     #[test]

@@ -1,5 +1,4 @@
-use anyhow::Result;
-use std::io::Write;
+use std::io::{Result, Write};
 
 #[derive(Debug, Clone, Copy)]
 pub struct RowSeps {
@@ -138,35 +137,29 @@ impl Default for Style {
 }
 
 impl Style {
-    pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: Option<&RowSep>) -> Result<()> {
-        match sep {
-            Some(sep) => {
-                write!(wtr, "{:indent$}", "", indent = self.indent)?;
-                if self.colseps.lhs.is_some() {
-                    write!(wtr, "{}", sep.ljunc)?;
-                }
-                let mut iter = widths.iter().peekable();
-                while let Some(width) = iter.next() {
-                    for _ in 0..width + self.padding * 2 {
-                        write!(wtr, "{}", sep.inner)?;
-                    }
-                    if self.colseps.mid.is_some() && iter.peek().is_some() {
-                        write!(wtr, "{}", sep.cjunc)?;
-                    }
-                }
-                if self.colseps.rhs.is_some() {
-                    write!(wtr, "{}", sep.rjunc)?;
-                }
-                writeln!(wtr)?;
-                Ok(())
-            }
-            None => Ok(()),
+    pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: &RowSep) -> Result<()> {
+        write!(wtr, "{:indent$}", "", indent = self.indent)?;
+        if self.colseps.lhs.is_some() {
+            write!(wtr, "{}", sep.ljunc)?;
         }
+        let mut iter = widths.iter().peekable();
+        while let Some(width) = iter.next() {
+            for _ in 0..width + self.padding * 2 {
+                write!(wtr, "{}", sep.inner)?;
+            }
+            if self.colseps.mid.is_some() && iter.peek().is_some() {
+                write!(wtr, "{}", sep.cjunc)?;
+            }
+        }
+        if self.colseps.rhs.is_some() {
+            write!(wtr, "{}", sep.rjunc)?;
+        }
+        writeln!(wtr)
     }
 
-    pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, sep: Option<&char>) -> Result<()> {
-        sep.map(|s| write!(wtr, "{}", s)).transpose()?;
-        Ok(())
+    #[inline]
+    pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, sep: char) -> Result<()> {
+        write!(wtr, "{}", sep)
     }
 }
 
@@ -233,26 +226,32 @@ impl StyleBuilder {
 #[cfg(test)]
 mod test {
     use super::*;
+    use anyhow::Result;
+    use std::str;
 
     #[test]
     fn test_write_column_separator() -> Result<()> {
         let fmt = StyleBuilder::new().col_seps('|', '|', '|').padding(1).build();
-        let mut out = Vec::new();
-        fmt.write_col_sep(&mut out, fmt.colseps.lhs.as_ref())?;
+        let buf = &mut Vec::new();
 
-        let out = String::from_utf8(out)?;
-        assert_eq!("|", out);
+        fmt.colseps.lhs.map(|sep| fmt.write_col_sep(buf, sep)).transpose()?;
+
+        assert_eq!("|", str::from_utf8(buf)?);
         Ok(())
     }
 
     #[test]
     fn test_write_row_separator() -> Result<()> {
         let fmt = StyleBuilder::new().indent(4).build();
-        let mut out = Vec::new();
-        fmt.write_row_sep(&mut out, &[2, 4, 6], fmt.rowseps.top.as_ref())?;
+        let buf = &mut Vec::new();
+        let widths = &[2, 4, 6];
 
-        let out = String::from_utf8(out)?;
-        assert_eq!("    +----+------+--------+\n", out);
+        fmt.rowseps
+            .top
+            .map(|sep| fmt.write_row_sep(buf, widths, &sep))
+            .transpose()?;
+
+        assert_eq!("    +----+------+--------+\n", str::from_utf8(buf)?);
         Ok(())
     }
 }

@@ -1,5 +1,4 @@
-use anyhow::Result;
-use std::io::Write;
+use std::io::{Result, Write};
 
 use crate::table::{Cell, Style};
 
@@ -16,28 +15,32 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 }
 
 impl<'a> Row<'a> {
-    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize]) -> Result<()> {
+    pub fn write<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize]) -> Result<()> {
         let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
-
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
-        fmt.write_col_sep(wtr, fmt.colseps.lhs.as_ref())?;
+        fmt.colseps.lhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
         self.cells
             .iter()
             .zip(widths)
-            .map(|(cell, &width)| cell.truncate(width))
+            .map(|(cell, &width)| cell.unicode_pad(width))
             .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding))
             .intersperse(sep)
             .try_for_each(|s| write!(wtr, "{}", s))?;
-        fmt.write_col_sep(wtr, fmt.colseps.rhs.as_ref())?;
-
-        writeln!(wtr)?;
+        fmt.colseps.rhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
         Ok(())
+    }
+
+    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize]) -> Result<()> {
+        self.write(wtr, fmt, widths).and_then(|_| writeln!(wtr))
     }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use anyhow::Result;
+    use std::str;
+
     #[test]
     fn write_ascii_row() -> Result<()> {
         let row = Row::from_iter(["a", "b"]);
@@ -46,7 +49,7 @@ mod test {
         let widths = [3, 4];
 
         row.writeln(buf, &fmt, &widths)?;
-        assert_eq!("| a   | b    |\n", std::str::from_utf8(buf)?);
+        assert_eq!("| a   | b    |\n", str::from_utf8(buf)?);
         Ok(())
     }
 
@@ -58,7 +61,7 @@ mod test {
         let widths = [10, 8, 2];
 
         row.writeln(buf, &fmt, &widths)?;
-        assert_eq!("| 李磊(Jack) | 四川省成 | 💍 |\n", std::str::from_utf8(buf)?);
+        assert_eq!("| 李磊(Jack) | 四川省成 | 💍 |\n", str::from_utf8(buf)?);
         Ok(())
     }
 }

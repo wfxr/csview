@@ -11,7 +11,7 @@ impl<'a> Cell<'a> {
         Self { text }
     }
 
-    pub fn truncate(&self, width: usize) -> Cow<str> {
+    pub fn unicode_pad(&self, width: usize) -> Cow<str> {
         self.text.unicode_pad(width, Alignment::Left, true)
     }
 }
