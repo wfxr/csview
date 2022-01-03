@@ -12,7 +12,7 @@ pub fn print(
         .delimiter(delimiter as u8)
         .has_headers(has_headers)
         .from_reader(reader);
-    let table = CsvTableWriter::new(rdr, 100)?;
+    let table = CsvTableWriter::new(rdr, 10000)?;
     table.writeln(&mut std::io::stdout(), &style)?;
     Ok(())
 }

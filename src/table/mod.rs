@@ -115,6 +115,32 @@ mod test {
     }
 
     #[test]
+    fn test_write_without_padding() -> Result<()> {
+        let text = "a,b,c\n1,2,3\n4,5,6";
+        let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
+        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let fmt = TableFormatBuilder::default().padding(0).build();
+
+        let mut buf = Vec::new();
+        wtr.writeln(&mut buf, &fmt)?;
+
+        assert_eq!(
+            "
++-+-+-+
+|a|b|c|
++-+-+-+
+|1|2|3|
++-+-+-+
+|4|5|6|
++-+-+-+
+"
+            .trim_start(),
+            std::str::from_utf8(&mut buf)?
+        );
+        Ok(())
+    }
+
+    #[test]
     fn test_write_with_indent() -> Result<()> {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
