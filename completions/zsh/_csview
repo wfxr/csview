@@ -32,7 +32,7 @@ _csview() {
 '--no-headers[Specify that the input has no header row]' \
 '(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
 '(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
-'::FILE -- File to read:_files' \
+'::FILE -- File to view:_files' \
 ":: :_csview_commands" \
 "*::: :->csview" \
 && ret=0

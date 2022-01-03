@@ -8,8 +8,9 @@ use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 #[clap(about, version)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 #[clap(global_setting(AppSettings::DisableHelpSubcommand))]
+#[clap(global_setting(AppSettings::NextLineHelp))]
 pub struct App {
-    /// File to read.
+    /// File to view.
     #[clap(name = "FILE", value_hint = ValueHint::FilePath)]
     pub file: Option<PathBuf>,
 
