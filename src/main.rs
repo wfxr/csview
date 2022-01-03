@@ -9,7 +9,7 @@ use cli::{App, Subcommand};
 use csv::{ErrorKind, ReaderBuilder};
 use std::{
     fs::File,
-    io::{self, Read},
+    io::{self, BufWriter, Read},
     process,
 };
 use table::CsvTableWriter;
@@ -74,6 +74,8 @@ fn try_main() -> anyhow::Result<()> {
             sniff,
             ..
         } => {
+            let stdout = io::stdout();
+            let wtr = &mut BufWriter::new(stdout.lock());
             let rdr = ReaderBuilder::new()
                 .delimiter(if tsv { b'\t' } else { delimiter as u8 })
                 .has_headers(!no_headers)
@@ -81,9 +83,10 @@ fn try_main() -> anyhow::Result<()> {
                     Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
                     None => Box::new(io::stdin()),
                 });
+
             let sniff = if sniff == 0 { usize::MAX } else { sniff };
             let table = CsvTableWriter::new(rdr, sniff)?;
-            table.writeln(&mut std::io::stdout(), &table_style(style, padding, indent))?;
+            table.writeln(wtr, &table_style(style, padding, indent))?;
         }
     }
     Ok(())
