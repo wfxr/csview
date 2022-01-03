@@ -1,19 +1,19 @@
 #![feature(iter_intersperse)]
 
 mod cli;
-mod core;
 mod style;
 mod table;
 
 use clap::{IntoApp, Parser};
 use cli::{App, Subcommand};
-use csv::ErrorKind;
+use csv::{ErrorKind, ReaderBuilder};
 use std::{
     fs::File,
-    io::{self, BufRead, BufReader},
+    io::{self, Read},
     process,
 };
 use style::table_format;
+use table::CsvTableWriter;
 
 fn main() {
     if let Err(e) = try_main() {
@@ -64,12 +64,15 @@ fn try_main() -> anyhow::Result<()> {
             clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
         App { file, no_headers, tsv, delimiter, style, padding, indent, .. } => {
-            let reader: Box<dyn BufRead> = match file {
-                Some(path) => Box::new(BufReader::new(File::open(path)?)),
-                None => Box::new(BufReader::new(io::stdin())),
-            };
-            let delimiter = if tsv { '\t' } else { delimiter };
-            core::print(reader, !no_headers, delimiter, table_format(style, padding, indent))?;
+            let rdr = ReaderBuilder::new()
+                .delimiter(if tsv { b'\t' } else { delimiter as u8 })
+                .has_headers(!no_headers)
+                .from_reader(match file {
+                    Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
+                    None => Box::new(io::stdin()),
+                });
+            let table = CsvTableWriter::new(rdr, 10000)?;
+            table.writeln(&mut std::io::stdout(), &table_format(style, padding, indent))?;
         }
     }
     Ok(())
