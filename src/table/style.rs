@@ -137,7 +137,7 @@ impl Default for Style {
 }
 
 impl Style {
-    pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: &RowSep) -> Result<()> {
+    pub fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: &RowSep) -> Result<()> {
         write!(wtr, "{:indent$}", "", indent = self.indent)?;
         if self.colseps.lhs.is_some() {
             write!(wtr, "{}", sep.ljunc)?;
@@ -158,7 +158,7 @@ impl Style {
     }
 
     #[inline]
-    pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, sep: char) -> Result<()> {
+    pub fn write_col_sep<W: Write>(&self, wtr: &mut W, sep: char) -> Result<()> {
         write!(wtr, "{}", sep)
     }
 }

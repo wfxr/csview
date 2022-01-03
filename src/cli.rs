@@ -57,7 +57,7 @@ pub enum Subcommand {
     },
 }
 
-#[derive(Display, EnumString, EnumVariantNames, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Display, EnumString, EnumVariantNames)]
 #[strum(ascii_case_insensitive)]
 pub enum TableStyle {
     None,

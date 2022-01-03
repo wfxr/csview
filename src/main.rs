@@ -12,7 +12,7 @@ use std::{
     io::{self, BufWriter, Read},
     process,
 };
-use table::CsvTableWriter;
+use table::Table;
 use util::table_style;
 
 fn main() {
@@ -85,7 +85,7 @@ fn try_main() -> anyhow::Result<()> {
                 });
 
             let sniff = if sniff == 0 { usize::MAX } else { sniff };
-            let table = CsvTableWriter::new(rdr, sniff)?;
+            let table = Table::new(rdr, sniff)?;
             table.writeln(wtr, &table_style(style, padding, indent))?;
         }
     }

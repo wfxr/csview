@@ -8,21 +8,21 @@ use unicode_width::UnicodeWidthStr;
 
 pub use style::{RowSep, Style, StyleBuilder};
 
-pub struct CsvTableWriter {
-    pub(crate) header:  Option<StringRecord>,
-    pub(crate) widths:  Vec<usize>,
-    pub(crate) records: Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
+pub struct Table {
+    header:  Option<StringRecord>,
+    widths:  Vec<usize>,
+    records: Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
 }
 
-impl CsvTableWriter {
-    pub fn new<R: 'static + io::Read>(mut rdr: Reader<R>, sniff_rows: usize) -> Result<Self> {
+impl Table {
+    pub(crate) fn new<R: 'static + io::Read>(mut rdr: Reader<R>, sniff_rows: usize) -> Result<Self> {
         let header = rdr.has_headers().then(|| rdr.headers()).transpose()?.cloned();
         let (widths, buf) = sniff_widths(&mut rdr, header.as_ref(), sniff_rows)?;
         let records = Box::new(buf.into_iter().map(Ok).chain(rdr.into_records()));
         Ok(Self { header, widths, records })
     }
 
-    pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &Style) -> Result<()> {
+    pub(crate) fn writeln<W: Write>(self, wtr: &mut W, fmt: &Style) -> Result<()> {
         let widths = &self.widths;
         fmt.rowseps
             .top
@@ -100,7 +100,7 @@ mod test {
     fn test_write() -> Result<()> {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
-        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let wtr = Table::new(rdr, 3)?;
 
         let mut buf = Vec::new();
         wtr.writeln(&mut buf, &Style::default())?;
@@ -125,7 +125,7 @@ mod test {
     fn test_write_without_padding() -> Result<()> {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
-        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let wtr = Table::new(rdr, 3)?;
         let fmt = StyleBuilder::default().padding(0).build();
 
         let mut buf = Vec::new();
@@ -151,7 +151,7 @@ mod test {
     fn test_write_with_indent() -> Result<()> {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
-        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let wtr = Table::new(rdr, 3)?;
         let fmt = StyleBuilder::default().indent(4).build();
 
         let mut buf = Vec::new();
@@ -177,7 +177,7 @@ mod test {
     fn test_only_header() -> Result<()> {
         let text = "a,ab,abc";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
-        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let wtr = Table::new(rdr, 3)?;
         let fmt = Style::default();
 
         let mut buf = Vec::new();
@@ -199,7 +199,7 @@ mod test {
     fn test_without_header() -> Result<()> {
         let text = "1,123,35\n383,2, 17";
         let rdr = ReaderBuilder::new().has_headers(false).from_reader(text.as_bytes());
-        let wtr = CsvTableWriter::new(rdr, 3)?;
+        let wtr = Table::new(rdr, 3)?;
         let fmt = StyleBuilder::new()
             .col_sep('│')
             .row_seps(
