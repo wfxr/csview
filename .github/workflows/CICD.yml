@@ -23,7 +23,6 @@ jobs:
           - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , use-cross: use-cross }
           - { os: ubuntu-latest  , target: x86_64-unknown-linux-musl   , use-cross: use-cross }
           - { os: macos-latest   , target: x86_64-apple-darwin                                }
-          # - { os: windows-latest , target: i686-pc-windows-msvc                               }
           - { os: windows-latest , target: x86_64-pc-windows-msvc                             }
     steps:
     - name: Git checkout
@@ -137,15 +136,11 @@ jobs:
         mkdir -p tmp
         printf 'a,b,c\n1,2,3\n4,5,6\n7,8,9' > tmp/demo.csv
 
-    - name: Info
-      shell: bash
-      run: |
-        gcc --version || true
-        rustup -V
-        rustup toolchain list
-        rustup default
-        cargo -V
-        rustc -V
+    - name: Setup toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
     - name: Build
       uses: actions-rs/cargo@v1
       with:
