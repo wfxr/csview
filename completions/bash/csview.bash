@@ -22,7 +22,7 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts="-h -V -H -t -d --help --version --no-headers --tsv --delimiter --style <FILE> completion"
+            opts="-h -V -H -t -d -s -p -i --help --version --no-headers --tsv --delimiter --style --padding --indent --sniff <FILE> completion"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -38,6 +38,30 @@ _csview() {
                     ;;
                 --style)
                     COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced Markdown Grid" -- "${cur}"))
+                    return 0
+                    ;;
+                -s)
+                    COMPREPLY=($(compgen -W "None Ascii Sharp Rounded Reinforced Markdown Grid" -- "${cur}"))
+                    return 0
+                    ;;
+                --padding)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -p)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --indent)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -i)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --sniff)
+                    COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
                 *)

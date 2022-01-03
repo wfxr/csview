@@ -1,14 +1,19 @@
+#![feature(iter_intersperse)]
+
 mod cli;
-mod core;
-mod style;
+mod table;
+mod util;
+
 use clap::{IntoApp, Parser};
 use cli::{App, Subcommand};
-use csv::ErrorKind;
+use csv::{ErrorKind, ReaderBuilder};
 use std::{
     fs::File,
-    io::{self, BufRead, BufReader},
+    io::{self, BufWriter, Read},
     process,
 };
+use table::Table;
+use util::table_style;
 
 fn main() {
     if let Err(e) = try_main() {
@@ -53,18 +58,35 @@ fn main() {
 
 fn try_main() -> anyhow::Result<()> {
     let app: App = App::parse();
-    match app.subcommand {
-        Some(Subcommand::Completion { shell }) => {
+    match app {
+        App { subcommand: Some(Subcommand::Completion { shell }), .. } => {
             let app = &mut App::into_app();
             clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
-        None => {
-            let reader: Box<dyn BufRead> = match app.file {
-                Some(path) => Box::new(BufReader::new(File::open(path)?)),
-                None => Box::new(BufReader::new(io::stdin())),
-            };
-            let delimiter = if app.tsv { '\t' } else { app.delimiter };
-            core::print(reader, !app.no_headers, delimiter, app.border.into())?;
+        App {
+            file,
+            no_headers,
+            tsv,
+            delimiter,
+            style,
+            padding,
+            indent,
+            sniff,
+            ..
+        } => {
+            let stdout = io::stdout();
+            let wtr = &mut BufWriter::new(stdout.lock());
+            let rdr = ReaderBuilder::new()
+                .delimiter(if tsv { b'\t' } else { delimiter as u8 })
+                .has_headers(!no_headers)
+                .from_reader(match file {
+                    Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
+                    None => Box::new(io::stdin()),
+                });
+
+            let sniff = if sniff == 0 { usize::MAX } else { sniff };
+            let table = Table::new(rdr, sniff)?;
+            table.writeln(wtr, &table_style(style, padding, indent))?;
         }
     }
     Ok(())

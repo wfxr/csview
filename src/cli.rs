@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use clap::{AppSettings, Parser};
+use clap::{AppSettings, Parser, ValueHint};
 use clap_complete::Shell;
 use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 
@@ -8,26 +8,39 @@ use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 #[clap(about, version)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 #[clap(global_setting(AppSettings::DisableHelpSubcommand))]
+#[clap(global_setting(AppSettings::NextLineHelp))]
 pub struct App {
-    /// File to read
-    #[clap(name = "FILE")]
+    /// File to view.
+    #[clap(name = "FILE", value_hint = ValueHint::FilePath)]
     pub file: Option<PathBuf>,
 
     /// Specify that the input has no header row.
     #[clap(short = 'H', long = "no-headers")]
     pub no_headers: bool,
 
-    /// Use '\t' as delimiter for tsv
-    #[clap(short = 't', long = "tsv", conflicts_with = "delimiter")]
+    /// Use '\t' as delimiter for tsv.
+    #[clap(short, long, conflicts_with = "delimiter")]
     pub tsv: bool,
 
-    /// Specify the field delimiter
-    #[clap(short = 'd', long = "delimiter", default_value = ",")]
+    /// Specify the field delimiter.
+    #[clap(short, long, default_value_t = ',')]
     pub delimiter: char,
 
-    /// Specify the border style
-    #[clap(long = "style", default_value = Border::VARIANTS[1], possible_values = Border::VARIANTS, ignore_case = true)]
-    pub border: Border,
+    /// Specify the border style.
+    #[clap(short, long, default_value = TableStyle::VARIANTS[1], possible_values = TableStyle::VARIANTS, ignore_case = true)]
+    pub style: TableStyle,
+
+    /// Specify padding for table cell.
+    #[clap(short, long, default_value_t = 1)]
+    pub padding: usize,
+
+    /// Specify global indent for table.
+    #[clap(short, long, default_value_t = 0)]
+    pub indent: usize,
+
+    /// Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit.
+    #[clap(long, default_value_t = 1000, name = "LIMIT")]
+    pub sniff: usize,
 
     /// Subcommand
     #[clap(subcommand)]
@@ -36,17 +49,17 @@ pub struct App {
 
 #[derive(Parser)]
 pub enum Subcommand {
-    /// Generate shell completion file
+    /// Generate shell completion file.
     Completion {
-        /// Target shell name
+        /// Target shell name.
         #[clap(arg_enum)]
         shell: Shell,
     },
 }
 
-#[derive(Display, EnumString, EnumVariantNames, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Display, EnumString, EnumVariantNames)]
 #[strum(ascii_case_insensitive)]
-pub enum Border {
+pub enum TableStyle {
     None,
     Ascii,
     Sharp,
