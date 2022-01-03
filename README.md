@@ -32,20 +32,18 @@ $ cat example.csv
 Year,Make,Model,Description,Price
 1997,Ford,E350,"ac, abs, moon",3000.00
 1999,Chevy,"Venture ""Extended Edition""","",4900.00
-1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
-1996,Jeep,Grand Cherokee,"MUST SELL!
-air, moon roof, loaded",4799.00
+1999,Chevy,"Venture ""Extended Edition, Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL! air, moon roof",4799.00
 
 $ csview example.csv
-+------+-------+----------------------------------------+------------------------+---------+
-| Year | Make  | Model                                  | Description            | Price   |
-+------+-------+----------------------------------------+------------------------+---------+
-| 1997 | Ford  | E350                                   | ac, abs, moon          | 3000.00 |
-| 1999 | Chevy | Venture "Extended Edition"             |                        | 4900.00 |
-| 1999 | Chevy | Venture "Extended Edition, Very Large" |                        | 5000.00 |
-| 1996 | Jeep  | Grand Cherokee                         | MUST SELL!             | 4799.00 |
-|      |       |                                        | air, moon roof, loaded |         |
-+------+-------+----------------------------------------+------------------------+---------+
++------+-------+-----------------------------------+---------------------------+---------+
+| Year | Make  | Model                             | Description               | Price   |
++------+-------+-----------------------------------+---------------------------+---------+
+| 1997 | Ford  | E350                              | ac, abs, moon             | 3000.00 |
+| 1999 | Chevy | Venture "Extended Edition"        |                           | 4900.00 |
+| 1999 | Chevy | Venture "Extended Edition, Large" |                           | 5000.00 |
+| 1996 | Jeep  | Grand Cherokee                    | MUST SELL! air, moon roof | 4799.00 |
++------+-------+-----------------------------------+---------------------------+---------+
 
 $ head -n10 /etc/passwd | csview --no-headers -d:
 +------------------------+---+-------+-------+----------------------------+-----------------+
@@ -125,30 +123,30 @@ If you want the latest version, clone this repository and run `cargo build --rel
 
 - [small.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-action-csv) (10 rows, 4 cols, 695 bytes):
 
-| Tool                                                                                     | Command                   | Mean Time |  Min Time |    Memory |
-|------------------------------------------------------------------------------------------|---------------------------|----------:|----------:|----------:|
-| [csview](https://github.com/wfxr/csview/commit/d77a5b0fe5b10ebd9900c392585b314b0f1d09b2) | `csview small.csv`        | **0.3ms** | **0.1ms** | **2.4mb** |
-| [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                                     | `xsv table small.csv`     |     2.0ms |     1.8ms |     3.9mb |
+|                                           Tool                                           | Command                   | Mean Time |  Min Time |    Memory |
+|:----------------------------------------------------------------------------------------:|---------------------------|----------:|----------:|----------:|
+|                   [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                   | `xsv table small.csv`     |     2.0ms |     1.8ms |     3.9mb |
+|  [csview](https://github.com/wfxr/csview/tree/90ff90e26c3e4c4c37818d717555b3e8f90d27e3)  | `csview small.csv`        | **0.3ms** | **0.1ms** | **2.4mb** |
 | [column](https://github.com/util-linux/util-linux/blob/stable/v2.37/text-utils/column.c) | `column -s, -t small.csv` |     1.3ms |     1.1ms | **2.4mb** |
-| [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)                              | `csvlook small.csv`       |   148.1ms |   142.4ms |    27.3mb |
+|                [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)               | `csvlook small.csv`       |   148.1ms |   142.4ms |    27.3mb |
 
 - [medium.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-sample-csv) (10,000 rows, 10 cols, 624K bytes):
 
-| Tool                                                                                     | Command                   |  Mean Time |   Min Time |    Memory |
-|------------------------------------------------------------------------------------------|---------------------------|-----------:|-----------:|----------:|
-| [csview](https://github.com/wfxr/csview/commit/d77a5b0fe5b10ebd9900c392585b314b0f1d09b2) | `csview medium.csv`       | **0.017s** | **0.016s** | **2.8mb** |
-| [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                                     | `xsv table medium.csv`    |     0.031s |     0.029s |     4.4mb |
+|                                           Tool                                           | Command                   |  Mean Time |   Min Time |    Memory |
+|:----------------------------------------------------------------------------------------:|---------------------------|-----------:|-----------:|----------:|
+|                   [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                   | `xsv table medium.csv`    |     0.031s |     0.029s |     4.4mb |
+|  [csview](https://github.com/wfxr/csview/tree/90ff90e26c3e4c4c37818d717555b3e8f90d27e3)  | `csview medium.csv`       | **0.017s** | **0.016s** | **2.8mb** |
 | [column](https://github.com/util-linux/util-linux/blob/stable/v2.37/text-utils/column.c) | `column -s, -t small.csv` |     51.8ms |     49.8ms |     9.9mb |
-| [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)                              | `csvlook medium.csv`      |     2.664s |     2.617s |    46.8mb |
+|                [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)               | `csvlook medium.csv`      |     2.664s |     2.617s |    46.8mb |
 
-- `large.csv` (generated by concatenating [medium.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-sample-csv) 100 times, 1,000,000 rows, 10 cols, 61M bytes):
+- `large.csv` (1,000,000 rows, 10 cols, 61M bytes, generated by concatenating [medium.csv](https://gist.github.com/wfxr/567e890d4db508b3c7630a96b703a57e#file-sample-csv) 100 times):
 
-| Tool                                                                                     | Command                   |  Mean Time |   Min Time |    Memory |
-|------------------------------------------------------------------------------------------|---------------------------|-----------:|-----------:|----------:|
-| [csview](https://github.com/wfxr/csview/commit/d77a5b0fe5b10ebd9900c392585b314b0f1d09b2) | `csview large.csv`        | **1.686s** | **1.665s** | **2.8mb** |
-| [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                                     | `xsv table large.csv`     |     2.912s |     2.820s |     4.4mb |
+|                                           Tool                                           | Command                   |  Mean Time |   Min Time |    Memory |
+|:----------------------------------------------------------------------------------------:|---------------------------|-----------:|-----------:|----------:|
+|                   [xsv](https://github.com/BurntSushi/xsv/tree/0.13.0)                   | `xsv table large.csv`     |     2.912s |     2.820s |     4.4mb |
+|  [csview](https://github.com/wfxr/csview/tree/90ff90e26c3e4c4c37818d717555b3e8f90d27e3)  | `csview large.csv`        | **1.686s** | **1.665s** | **2.8mb** |
 | [column](https://github.com/util-linux/util-linux/blob/stable/v2.37/text-utils/column.c) | `column -s, -t small.csv` |    5.777ms |     5.759s |   767.6mb |
-| [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)                              | `csvlook large.csv`       |    20.665s |    20.549s |  1105.7mb |
+|                [csvlook](https://github.com/wireservice/csvkit/tree/1.0.6)               | `csvlook large.csv`       |    20.665s |    20.549s |  1105.7mb |
 
 ### F.A.Q.
 
