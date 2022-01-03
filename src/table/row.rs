@@ -52,13 +52,13 @@ mod test {
 
     #[test]
     fn write_cjk_row() -> Result<()> {
-        let row = Row::from_iter(["李磊", "四川省成都市"]);
+        let row = Row::from_iter(["李磊(Jack)", "四川省成都市", "💍"]);
         let buf = &mut Vec::new();
         let fmt = TableFormat::default();
-        let widths = [5, 8];
+        let widths = [10, 8, 2];
 
         row.writeln(buf, &fmt, &widths)?;
-        assert_eq!("| 李磊  | 四川省成 |\n", std::str::from_utf8(buf)?);
+        assert_eq!("| 李磊(Jack) | 四川省成 | 💍 |\n", std::str::from_utf8(buf)?);
         Ok(())
     }
 }
