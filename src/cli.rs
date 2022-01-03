@@ -27,8 +27,8 @@ pub struct App {
     pub delimiter: char,
 
     /// Specify the border style.
-    #[clap(short, long, default_value = Style::VARIANTS[1], possible_values = Style::VARIANTS, ignore_case = true)]
-    pub style: Style,
+    #[clap(short, long, default_value = TableStyle::VARIANTS[1], possible_values = TableStyle::VARIANTS, ignore_case = true)]
+    pub style: TableStyle,
 
     /// Specify padding for table cell.
     #[clap(short, long, default_value_t = 1)]
@@ -59,7 +59,7 @@ pub enum Subcommand {
 
 #[derive(Display, EnumString, EnumVariantNames, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[strum(ascii_case_insensitive)]
-pub enum Style {
+pub enum TableStyle {
     None,
     Ascii,
     Sharp,

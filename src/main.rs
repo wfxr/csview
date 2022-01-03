@@ -1,8 +1,8 @@
 #![feature(iter_intersperse)]
 
 mod cli;
-mod style;
 mod table;
+mod util;
 
 use clap::{IntoApp, Parser};
 use cli::{App, Subcommand};
@@ -12,8 +12,8 @@ use std::{
     io::{self, Read},
     process,
 };
-use style::table_format;
 use table::CsvTableWriter;
+use util::table_style;
 
 fn main() {
     if let Err(e) = try_main() {
@@ -83,7 +83,7 @@ fn try_main() -> anyhow::Result<()> {
                 });
             let sniff = if sniff == 0 { usize::MAX } else { sniff };
             let table = CsvTableWriter::new(rdr, sniff)?;
-            table.writeln(&mut std::io::stdout(), &table_format(style, padding, indent))?;
+            table.writeln(&mut std::io::stdout(), &table_style(style, padding, indent))?;
         }
     }
     Ok(())

@@ -34,12 +34,12 @@ pub struct RowSeps {
 /// The characters used for printing a row separator
 #[derive(Debug, Clone, Copy)]
 pub struct RowSep {
-    /// Normal row separator
+    /// Inner row separator
     /// ```
     /// ┌───┬───┐
     ///   ^
     /// ```
-    sep:   char,
+    inner: char,
     /// Left junction separator
     /// ```
     /// ┌───┬───┐
@@ -84,7 +84,7 @@ pub struct ColSeps {
 
 impl RowSep {
     pub fn new(sep: char, ljunc: char, cjunc: char, rjunc: char) -> RowSep {
-        RowSep { sep, ljunc, cjunc, rjunc }
+        RowSep { inner: sep, ljunc, cjunc, rjunc }
     }
 }
 
@@ -112,11 +112,11 @@ impl Default for ColSeps {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct TableStyle {
-    /// Column separators
+pub struct Style {
+    /// Column style
     pub colseps: ColSeps,
 
-    /// Row separators
+    /// Row style
     pub rowseps: RowSeps,
 
     /// Left and right padding
@@ -126,7 +126,7 @@ pub struct TableStyle {
     pub indent: usize,
 }
 
-impl Default for TableStyle {
+impl Default for Style {
     fn default() -> Self {
         Self {
             indent:  0,
@@ -137,25 +137,25 @@ impl Default for TableStyle {
     }
 }
 
-impl TableStyle {
+impl Style {
     pub(crate) fn write_row_sep<W: Write>(&self, wtr: &mut W, widths: &[usize], sep: Option<&RowSep>) -> Result<()> {
         match sep {
-            Some(row) => {
+            Some(sep) => {
                 write!(wtr, "{:indent$}", "", indent = self.indent)?;
                 if self.colseps.lhs.is_some() {
-                    write!(wtr, "{}", row.ljunc)?;
+                    write!(wtr, "{}", sep.ljunc)?;
                 }
                 let mut iter = widths.iter().peekable();
                 while let Some(width) = iter.next() {
                     for _ in 0..width + self.padding * 2 {
-                        write!(wtr, "{}", row.sep)?;
+                        write!(wtr, "{}", sep.inner)?;
                     }
                     if self.colseps.mid.is_some() && iter.peek().is_some() {
-                        write!(wtr, "{}", row.cjunc)?;
+                        write!(wtr, "{}", sep.cjunc)?;
                     }
                 }
                 if self.colseps.rhs.is_some() {
-                    write!(wtr, "{}", row.rjunc)?;
+                    write!(wtr, "{}", sep.rjunc)?;
                 }
                 writeln!(wtr)?;
                 Ok(())
@@ -171,11 +171,11 @@ impl TableStyle {
 }
 
 #[derive(Default, Debug, Clone)]
-pub struct TableStyleBuilder {
-    format: Box<TableStyle>,
+pub struct StyleBuilder {
+    format: Box<Style>,
 }
 
-impl TableStyleBuilder {
+impl StyleBuilder {
     pub fn new() -> Self {
         Self::default()
     }
@@ -225,7 +225,7 @@ impl TableStyleBuilder {
         self
     }
 
-    pub fn build(&self) -> TableStyle {
+    pub fn build(&self) -> Style {
         *self.format
     }
 }
@@ -236,7 +236,7 @@ mod test {
 
     #[test]
     fn test_write_column_separator() -> Result<()> {
-        let fmt = TableStyleBuilder::new().col_seps('|', '|', '|').padding(1).build();
+        let fmt = StyleBuilder::new().col_seps('|', '|', '|').padding(1).build();
         let mut out = Vec::new();
         fmt.write_col_sep(&mut out, fmt.colseps.lhs.as_ref())?;
 
@@ -247,7 +247,7 @@ mod test {
 
     #[test]
     fn test_write_row_separator() -> Result<()> {
-        let fmt = TableStyleBuilder::new().indent(4).build();
+        let fmt = StyleBuilder::new().indent(4).build();
         let mut out = Vec::new();
         fmt.write_row_sep(&mut out, &[2, 4, 6], fmt.rowseps.top.as_ref())?;
 

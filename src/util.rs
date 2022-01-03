@@ -1,40 +1,40 @@
 use crate::{
-    cli::Style,
-    table::{RowSep, TableStyle, TableStyleBuilder},
+    cli::TableStyle,
+    table::{RowSep, Style, StyleBuilder},
 };
 
-pub fn table_format(style: Style, padding: usize, indent: usize) -> TableStyle {
+pub fn table_style(style: TableStyle, padding: usize, indent: usize) -> Style {
     let builder = match style {
-        Style::None => TableStyleBuilder::new().clear_seps(),
-        Style::Ascii => TableStyleBuilder::new().col_sep('|').row_seps(
+        TableStyle::None => StyleBuilder::new().clear_seps(),
+        TableStyle::Ascii => StyleBuilder::new().col_sep('|').row_seps(
             RowSep::new('-', '+', '+', '+'),
             RowSep::new('-', '+', '+', '+'),
             None,
             RowSep::new('-', '+', '+', '+'),
         ),
-        Style::Sharp => TableStyleBuilder::new().col_sep('│').row_seps(
+        TableStyle::Sharp => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '┌', '┬', '┐'),
             RowSep::new('─', '├', '┼', '┤'),
             None,
             RowSep::new('─', '└', '┴', '┘'),
         ),
-        Style::Rounded => TableStyleBuilder::new().col_sep('│').row_seps(
+        TableStyle::Rounded => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '╭', '┬', '╮'),
             RowSep::new('─', '├', '┼', '┤'),
             None,
             RowSep::new('─', '╰', '┴', '╯'),
         ),
-        Style::Reinforced => TableStyleBuilder::new().col_sep('│').row_seps(
+        TableStyle::Reinforced => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '┏', '┬', '┓'),
             RowSep::new('─', '├', '┼', '┤'),
             None,
             RowSep::new('─', '┗', '┴', '┛'),
         ),
-        Style::Markdown =>
-            TableStyleBuilder::new()
+        TableStyle::Markdown =>
+            StyleBuilder::new()
                 .col_sep('|')
                 .row_seps(None, RowSep::new('-', '|', '|', '|'), None, None),
-        Style::Grid => TableStyleBuilder::new().col_sep('│').row_seps(
+        TableStyle::Grid => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '┌', '┬', '┐'),
             RowSep::new('─', '├', '┼', '┤'),
             RowSep::new('─', '├', '┼', '┤'),
