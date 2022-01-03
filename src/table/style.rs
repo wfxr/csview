@@ -2,7 +2,7 @@ use anyhow::Result;
 use std::io::Write;
 
 /// Position of row separator
-#[derive(Clone, Debug, PartialEq, Copy, Hash, Eq)]
+#[derive(Debug, Clone, Copy)]
 pub enum RowPos {
     /// Top separator row (top border)
     /// ```
@@ -32,31 +32,8 @@ pub enum RowPos {
     Bot,
 }
 
-/// Position of column separator
-#[derive(Clone, Debug, PartialEq, Copy, Hash, Eq)]
-pub enum ColPos {
-    /// Left separator column (left border)
-    /// ```
-    ///  │ 1 │ 2 │
-    ///  ^
-    /// ```
-    Lhs,
-    /// Middle column separators
-    /// ```
-    ///  │ 1 │ 2 │
-    ///      ^
-    /// ```
-    Mid,
-    /// Right separator column (right border)
-    /// ```
-    ///  │ 1 │ 2 │
-    ///          ^
-    /// ```
-    Rhs,
-}
-
 /// The characters used for printing a row separator
-#[derive(Clone, Debug, Copy, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy)]
 pub struct RowSep {
     /// Normal row separator
     /// ```
@@ -84,6 +61,51 @@ pub struct RowSep {
     rjunc: char,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct RowSeps {
+    /// Optional top line separator
+    pub top: Option<RowSep>,
+    /// Optional title line separator
+    pub snd: Option<RowSep>,
+    /// Optional internal row separator
+    pub mid: Option<RowSep>,
+    /// Optional bottom line separator
+    pub bot: Option<RowSep>,
+}
+
+/// Position of column separator
+#[derive(Debug, Clone, Copy)]
+pub enum ColPos {
+    /// Left separator column (left border)
+    /// ```
+    ///  │ 1 │ 2 │
+    ///  ^
+    /// ```
+    Lhs,
+    /// Middle column separators
+    /// ```
+    ///  │ 1 │ 2 │
+    ///      ^
+    /// ```
+    Mid,
+    /// Right separator column (right border)
+    /// ```
+    ///  │ 1 │ 2 │
+    ///          ^
+    /// ```
+    Rhs,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct ColSeps {
+    /// Optional left border character
+    pub lhs: Option<char>,
+    /// Optional inner column separator character
+    pub mid: Option<char>,
+    /// Optional right border character
+    pub rhs: Option<char>,
+}
+
 impl RowSep {
     pub fn new(sep: char, ljunc: char, cjunc: char, rjunc: char) -> RowSep {
         RowSep { sep, ljunc, cjunc, rjunc }
@@ -94,18 +116,6 @@ impl Default for RowSep {
     fn default() -> Self {
         RowSep::new('-', '+', '+', '+')
     }
-}
-
-#[derive(Clone, Debug, Copy, Hash, PartialEq, Eq)]
-pub struct RowSeps {
-    /// Optional top line separator
-    pub top: Option<RowSep>,
-    /// Optional title line separator
-    pub snd: Option<RowSep>,
-    /// Optional internal row separator
-    pub mid: Option<RowSep>,
-    /// Optional bottom line separator
-    pub bot: Option<RowSep>,
 }
 
 impl Default for RowSeps {
@@ -119,34 +129,28 @@ impl Default for RowSeps {
     }
 }
 
-#[derive(Clone, Debug, Copy, Hash, PartialEq, Eq)]
-pub struct ColSeps {
-    /// Optional left border character
-    pub lhs: Option<char>,
-    /// Optional inner column separator character
-    pub mid: Option<char>,
-    /// Optional right border character
-    pub rhs: Option<char>,
-}
-
 impl Default for ColSeps {
     fn default() -> Self {
         Self { lhs: Some('|'), mid: Some('|'), rhs: Some('|') }
     }
 }
 
-#[derive(Clone, Debug, Copy, Hash, PartialEq, Eq)]
-pub struct TableFormat {
+#[derive(Debug, Clone, Copy)]
+pub struct TableStyle {
+    /// Column separators
     pub colseps: ColSeps,
+
+    /// Row separators
     pub rowseps: RowSeps,
 
     /// Left and right padding
     pub padding: usize,
+
     /// Global indentation
-    pub indent:  usize,
+    pub indent: usize,
 }
 
-impl Default for TableFormat {
+impl Default for TableStyle {
     fn default() -> Self {
         Self {
             indent:  0,
@@ -157,7 +161,7 @@ impl Default for TableFormat {
     }
 }
 
-impl TableFormat {
+impl TableStyle {
     fn get_row_sep(&self, pos: RowPos) -> &Option<RowSep> {
         match pos {
             RowPos::Mid => &self.rowseps.mid,
@@ -205,19 +209,17 @@ impl TableFormat {
     }
 
     pub(crate) fn write_col_sep<W: Write>(&self, wtr: &mut W, pos: ColPos) -> Result<()> {
-        match self.get_col_sep(pos) {
-            Some(s) => Ok(write!(wtr, "{}", s)?),
-            None => Ok(()),
-        }
+        self.get_col_sep(pos).map(|s| write!(wtr, "{}", s)).transpose()?;
+        Ok(())
     }
 }
 
-#[derive(Default)]
-pub struct TableFormatBuilder {
-    format: Box<TableFormat>,
+#[derive(Default, Debug, Clone)]
+pub struct TableStyleBuilder {
+    format: Box<TableStyle>,
 }
 
-impl TableFormatBuilder {
+impl TableStyleBuilder {
     pub fn new() -> Self {
         Self::default()
     }
@@ -267,20 +269,8 @@ impl TableFormatBuilder {
         self
     }
 
-    pub fn build(&self) -> TableFormat {
+    pub fn build(&self) -> TableStyle {
         *self.format
-    }
-}
-
-impl From<TableFormatBuilder> for TableFormat {
-    fn from(val: TableFormatBuilder) -> Self {
-        *val.format
-    }
-}
-
-impl From<TableFormat> for TableFormatBuilder {
-    fn from(fmt: TableFormat) -> Self {
-        TableFormatBuilder { format: Box::new(fmt) }
     }
 }
 
@@ -289,8 +279,8 @@ mod test {
     use super::*;
 
     #[test]
-    fn print_column_separator() -> Result<()> {
-        let fmt = TableFormatBuilder::new().col_seps('|', '|', '|').padding(1).build();
+    fn test_write_column_separator() -> Result<()> {
+        let fmt = TableStyleBuilder::new().col_seps('|', '|', '|').padding(1).build();
         let mut out = Vec::new();
         fmt.write_col_sep(&mut out, ColPos::Lhs)?;
 
@@ -300,8 +290,8 @@ mod test {
     }
 
     #[test]
-    fn test_print_line_separator() -> Result<()> {
-        let fmt = TableFormatBuilder::new().indent(4).build();
+    fn test_write_row_separator() -> Result<()> {
+        let fmt = TableStyleBuilder::new().indent(4).build();
         let mut out = Vec::new();
         fmt.write_row_sep(&mut out, &[2, 4, 6], RowPos::Top)?;
 

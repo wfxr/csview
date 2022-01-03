@@ -1,6 +1,6 @@
 mod cell;
-mod format;
 mod row;
+mod style;
 
 use anyhow::Result;
 use cell::Cell;
@@ -9,7 +9,7 @@ use row::Row;
 use std::io::{self, Write};
 use unicode_width::UnicodeWidthStr;
 
-pub use format::{RowPos, RowSep, TableFormat, TableFormatBuilder};
+pub use style::{RowPos, RowSep, TableStyle, TableStyleBuilder};
 
 pub struct CsvTableWriter {
     pub(crate) header:  Option<StringRecord>,
@@ -25,7 +25,7 @@ impl CsvTableWriter {
         Ok(Self { header, widths, records })
     }
 
-    pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &TableFormat) -> Result<()> {
+    pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &TableStyle) -> Result<()> {
         let widths = &self.widths;
         fmt.write_row_sep(wtr, widths, RowPos::Top)?;
 
@@ -84,8 +84,6 @@ fn sniff_widths<R: io::Read>(
 
 #[cfg(test)]
 mod test {
-    use crate::table::format::TableFormatBuilder;
-
     use super::*;
     use csv::ReaderBuilder;
 
@@ -96,7 +94,7 @@ mod test {
         let wtr = CsvTableWriter::new(rdr, 3)?;
 
         let mut buf = Vec::new();
-        wtr.writeln(&mut buf, &TableFormat::default())?;
+        wtr.writeln(&mut buf, &TableStyle::default())?;
 
         assert_eq!(
             "
@@ -119,7 +117,7 @@ mod test {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
         let wtr = CsvTableWriter::new(rdr, 3)?;
-        let fmt = TableFormatBuilder::default().padding(0).build();
+        let fmt = TableStyleBuilder::default().padding(0).build();
 
         let mut buf = Vec::new();
         wtr.writeln(&mut buf, &fmt)?;
@@ -145,7 +143,7 @@ mod test {
         let text = "a,b,c\n1,2,3\n4,5,6";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
         let wtr = CsvTableWriter::new(rdr, 3)?;
-        let fmt = TableFormatBuilder::default().indent(4).build();
+        let fmt = TableStyleBuilder::default().indent(4).build();
 
         let mut buf = Vec::new();
         wtr.writeln(&mut buf, &fmt)?;
@@ -171,7 +169,7 @@ mod test {
         let text = "a,ab,abc";
         let rdr = ReaderBuilder::new().has_headers(true).from_reader(text.as_bytes());
         let wtr = CsvTableWriter::new(rdr, 3)?;
-        let fmt = TableFormat::default();
+        let fmt = TableStyle::default();
 
         let mut buf = Vec::new();
         wtr.writeln(&mut buf, &fmt)?;
@@ -193,7 +191,7 @@ mod test {
         let text = "1,123,35\n383,2, 17";
         let rdr = ReaderBuilder::new().has_headers(false).from_reader(text.as_bytes());
         let wtr = CsvTableWriter::new(rdr, 3)?;
-        let fmt = TableFormatBuilder::new()
+        let fmt = TableStyleBuilder::new()
             .col_sep('│')
             .row_seps(
                 RowSep::new('─', '╭', '┬', '╮'),

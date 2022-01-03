@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::Write;
 
-use crate::table::{format::ColPos, Cell, TableFormat};
+use crate::table::{style::ColPos, Cell, TableStyle};
 
 /// Represent a table row made of cells
 #[derive(Clone, Debug)]
@@ -16,7 +16,7 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 }
 
 impl<'a> Row<'a> {
-    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &TableFormat, widths: &[usize]) -> Result<()> {
+    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &TableStyle, widths: &[usize]) -> Result<()> {
         let sep = fmt.get_col_sep(ColPos::Mid).map(|c| c.to_string()).unwrap_or_default();
 
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
@@ -42,7 +42,7 @@ mod test {
     fn write_ascii_row() -> Result<()> {
         let row = Row::from_iter(["a", "b"]);
         let buf = &mut Vec::new();
-        let fmt = TableFormat::default();
+        let fmt = TableStyle::default();
         let widths = [3, 4];
 
         row.writeln(buf, &fmt, &widths)?;
@@ -54,7 +54,7 @@ mod test {
     fn write_cjk_row() -> Result<()> {
         let row = Row::from_iter(["李磊(Jack)", "四川省成都市", "💍"]);
         let buf = &mut Vec::new();
-        let fmt = TableFormat::default();
+        let fmt = TableStyle::default();
         let widths = [10, 8, 2];
 
         row.writeln(buf, &fmt, &widths)?;
