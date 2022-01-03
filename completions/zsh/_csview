@@ -23,6 +23,7 @@ _csview() {
 '--padding=[Specify padding for table cell]:PADDING: ' \
 '-i+[Specify global indent for table]:INDENT: ' \
 '--indent=[Specify global indent for table]:INDENT: ' \
+'--sniff=[Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit]:LIMIT: ' \
 '-h[Print help information]' \
 '--help[Print help information]' \
 '-V[Print version information]' \

@@ -63,7 +63,17 @@ fn try_main() -> anyhow::Result<()> {
             let app = &mut App::into_app();
             clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
-        App { file, no_headers, tsv, delimiter, style, padding, indent, .. } => {
+        App {
+            file,
+            no_headers,
+            tsv,
+            delimiter,
+            style,
+            padding,
+            indent,
+            sniff,
+            ..
+        } => {
             let rdr = ReaderBuilder::new()
                 .delimiter(if tsv { b'\t' } else { delimiter as u8 })
                 .has_headers(!no_headers)
@@ -71,7 +81,8 @@ fn try_main() -> anyhow::Result<()> {
                     Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
                     None => Box::new(io::stdin()),
                 });
-            let table = CsvTableWriter::new(rdr, 10000)?;
+            let sniff = if sniff == 0 { usize::MAX } else { sniff };
+            let table = CsvTableWriter::new(rdr, sniff)?;
             table.writeln(&mut std::io::stdout(), &table_format(style, padding, indent))?;
         }
     }

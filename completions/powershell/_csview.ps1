@@ -28,6 +28,7 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
             [CompletionResult]::new('--padding', 'padding', [CompletionResultType]::ParameterName, 'Specify padding for table cell')
             [CompletionResult]::new('-i', 'i', [CompletionResultType]::ParameterName, 'Specify global indent for table')
             [CompletionResult]::new('--indent', 'indent', [CompletionResultType]::ParameterName, 'Specify global indent for table')
+            [CompletionResult]::new('--sniff', 'sniff', [CompletionResultType]::ParameterName, 'Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Print help information')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help information')
             [CompletionResult]::new('-V', 'V', [CompletionResultType]::ParameterName, 'Print version information')

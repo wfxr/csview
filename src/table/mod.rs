@@ -56,7 +56,7 @@ impl CsvTableWriter {
 fn sniff_widths<R: io::Read>(
     rdr: &mut Reader<R>,
     header: Option<&StringRecord>,
-    mut n: usize,
+    mut sniff_rows: usize,
 ) -> Result<(Vec<usize>, Vec<StringRecord>)> {
     let sniff = |record: &StringRecord, widths: &mut Vec<usize>| {
         widths.resize(record.len(), 0);
@@ -72,11 +72,11 @@ fn sniff_widths<R: io::Read>(
 
     let mut record = header.cloned().unwrap_or_default();
     sniff(&record, &mut widths);
-    n -= 1;
+    sniff_rows -= 1;
 
-    while n > 0 && rdr.read_record(&mut record)? {
+    while sniff_rows > 0 && rdr.read_record(&mut record)? {
         sniff(&record, &mut widths);
-        n -= 1;
+        sniff_rows -= 1;
         buf.push(record.clone());
     }
     Ok((widths, buf))

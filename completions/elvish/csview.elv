@@ -26,6 +26,7 @@ set edit:completion:arg-completer[csview] = [@words]{
             cand --padding 'Specify padding for table cell'
             cand -i 'Specify global indent for table'
             cand --indent 'Specify global indent for table'
+            cand --sniff 'Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit'
             cand -h 'Print help information'
             cand --help 'Print help information'
             cand -V 'Print version information'
