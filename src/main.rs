@@ -1,6 +1,10 @@
+#![feature(iter_intersperse)]
+
 mod cli;
 mod core;
 mod style;
+mod table;
+
 use clap::{IntoApp, Parser};
 use cli::{App, Subcommand};
 use csv::ErrorKind;
