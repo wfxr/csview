@@ -26,8 +26,16 @@ pub struct App {
     pub delimiter: char,
 
     /// Specify the border style
-    #[clap(long, default_value = Style::VARIANTS[1], possible_values = Style::VARIANTS, ignore_case = true)]
+    #[clap(short, long, default_value = Style::VARIANTS[1], possible_values = Style::VARIANTS, ignore_case = true)]
     pub style: Style,
+
+    /// Specify padding for table cell
+    #[clap(short, long, default_value_t = 1)]
+    pub padding: usize,
+
+    /// Specify global indent for table
+    #[clap(short, long, default_value_t = 0)]
+    pub indent: usize,
 
     /// Subcommand
     #[clap(subcommand)]

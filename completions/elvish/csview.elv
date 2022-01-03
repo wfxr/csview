@@ -20,7 +20,12 @@ set edit:completion:arg-completer[csview] = [@words]{
         &'csview'= {
             cand -d 'Specify the field delimiter'
             cand --delimiter 'Specify the field delimiter'
+            cand -s 'Specify the border style'
             cand --style 'Specify the border style'
+            cand -p 'Specify padding for table cell'
+            cand --padding 'Specify padding for table cell'
+            cand -i 'Specify global indent for table'
+            cand --indent 'Specify global indent for table'
             cand -h 'Print help information'
             cand --help 'Print help information'
             cand -V 'Print version information'

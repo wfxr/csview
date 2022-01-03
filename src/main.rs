@@ -13,6 +13,7 @@ use std::{
     io::{self, BufRead, BufReader},
     process,
 };
+use style::table_format;
 
 fn main() {
     if let Err(e) = try_main() {
@@ -57,18 +58,18 @@ fn main() {
 
 fn try_main() -> anyhow::Result<()> {
     let app: App = App::parse();
-    match app.subcommand {
-        Some(Subcommand::Completion { shell }) => {
+    match app {
+        App { subcommand: Some(Subcommand::Completion { shell }), .. } => {
             let app = &mut App::into_app();
             clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
         }
-        None => {
-            let reader: Box<dyn BufRead> = match app.file {
+        App { file, no_headers, tsv, delimiter, style, padding, indent, .. } => {
+            let reader: Box<dyn BufRead> = match file {
                 Some(path) => Box::new(BufReader::new(File::open(path)?)),
                 None => Box::new(BufReader::new(io::stdin())),
             };
-            let delimiter = if app.tsv { '\t' } else { app.delimiter };
-            core::print(reader, !app.no_headers, delimiter, app.style.into())?;
+            let delimiter = if tsv { '\t' } else { delimiter };
+            core::print(reader, !no_headers, delimiter, table_format(style, padding, indent))?;
         }
     }
     Ok(())

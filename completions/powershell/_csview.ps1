@@ -22,7 +22,12 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
         'csview' {
             [CompletionResult]::new('-d', 'd', [CompletionResultType]::ParameterName, 'Specify the field delimiter')
             [CompletionResult]::new('--delimiter', 'delimiter', [CompletionResultType]::ParameterName, 'Specify the field delimiter')
+            [CompletionResult]::new('-s', 's', [CompletionResultType]::ParameterName, 'Specify the border style')
             [CompletionResult]::new('--style', 'style', [CompletionResultType]::ParameterName, 'Specify the border style')
+            [CompletionResult]::new('-p', 'p', [CompletionResultType]::ParameterName, 'Specify padding for table cell')
+            [CompletionResult]::new('--padding', 'padding', [CompletionResultType]::ParameterName, 'Specify padding for table cell')
+            [CompletionResult]::new('-i', 'i', [CompletionResultType]::ParameterName, 'Specify global indent for table')
+            [CompletionResult]::new('--indent', 'indent', [CompletionResultType]::ParameterName, 'Specify global indent for table')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Print help information')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help information')
             [CompletionResult]::new('-V', 'V', [CompletionResultType]::ParameterName, 'Print version information')
