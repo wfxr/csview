@@ -227,14 +227,9 @@ impl TableFormatBuilder {
         self
     }
 
-    pub fn row_sep(mut self, pos: RowPos, sep: impl Into<Option<RowSep>>) -> Self {
-        match pos {
-            RowPos::Top => self.format.rowseps.top = sep.into(),
-            RowPos::Snd => self.format.rowseps.snd = sep.into(),
-            RowPos::Mid => self.format.rowseps.mid = sep.into(),
-            RowPos::Bot => self.format.rowseps.bot = sep.into(),
-        }
-        self
+    pub fn col_sep(self, sep: impl Into<Option<char>>) -> Self {
+        let sep = sep.into();
+        self.col_seps(sep, sep, sep)
     }
 
     pub fn col_seps<L, M, R>(mut self, lhs: L, mid: M, rhs: R) -> Self

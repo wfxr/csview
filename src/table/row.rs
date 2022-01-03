@@ -16,14 +16,6 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 }
 
 impl<'a> Row<'a> {
-    pub fn new(cells: Vec<Cell<'a>>) -> Row<'a> {
-        Row { cells }
-    }
-
-    pub fn len(&self) -> usize {
-        self.cells.len()
-    }
-
     pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &TableFormat, widths: &[usize]) -> Result<()> {
         let sep = fmt.get_col_sep(ColPos::Mid).map(|c| c.to_string()).unwrap_or_default();
 

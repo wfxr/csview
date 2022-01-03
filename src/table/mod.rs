@@ -5,11 +5,11 @@ mod row;
 use anyhow::Result;
 use cell::Cell;
 use csv::{Reader, StringRecord};
-use format::{RowPos, TableFormat};
+use row::Row;
 use std::io::{self, Write};
 use unicode_width::UnicodeWidthStr;
 
-use self::row::Row;
+pub use format::{RowPos, RowSep, TableFormat, TableFormatBuilder};
 
 pub struct CsvTableWriter {
     pub(crate) header:  Option<StringRecord>,
@@ -18,14 +18,14 @@ pub struct CsvTableWriter {
 }
 
 impl CsvTableWriter {
-    fn new<R: 'static + io::Read>(mut rdr: Reader<R>, sniff_rows: usize) -> Result<Self> {
+    pub fn new<R: 'static + io::Read>(mut rdr: Reader<R>, sniff_rows: usize) -> Result<Self> {
         let header = rdr.has_headers().then(|| rdr.headers()).transpose()?.cloned();
         let (widths, buf) = sniff_widths(&mut rdr, sniff_rows)?;
         let records = Box::new(buf.into_iter().map(Ok).chain(rdr.into_records()));
         Ok(Self { header, widths, records })
     }
 
-    fn writeln<W: Write>(self, wtr: &mut W, fmt: &TableFormat) -> Result<()> {
+    pub fn writeln<W: Write>(self, wtr: &mut W, fmt: &TableFormat) -> Result<()> {
         let widths = &self.widths;
         fmt.write_row_sep(wtr, widths, RowPos::Top)?;
 

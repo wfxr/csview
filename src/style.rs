@@ -1,61 +1,60 @@
-use crate::cli::Border;
-use prettytable::format::{self, FormatBuilder, LinePosition, LineSeparator};
+use crate::{
+    cli::Border,
+    table::{RowSep, TableFormat, TableFormatBuilder},
+};
 
-impl From<Border> for format::TableFormat {
+impl From<Border> for TableFormat {
     fn from(style: Border) -> Self {
         match style {
-            Border::None => *format::consts::FORMAT_CLEAN,
-            Border::Ascii => FormatBuilder::new()
-                .column_separator('|')
-                .borders('|')
-                .separator(LinePosition::Title, LineSeparator::new('-', '+', '+', '+'))
-                .separator(LinePosition::Bottom, LineSeparator::new('-', '+', '+', '+'))
-                .separator(LinePosition::Top, LineSeparator::new('-', '+', '+', '+'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::None => TableFormatBuilder::new().clear_seps().build(),
+            Border::Ascii => TableFormatBuilder::new()
+                .col_sep('|')
+                .row_seps(
+                    RowSep::new('-', '+', '+', '+'),
+                    RowSep::new('-', '+', '+', '+'),
+                    None,
+                    RowSep::new('-', '+', '+', '+'),
+                )
                 .build(),
-            Border::Sharp => FormatBuilder::new()
-                .column_separator('│')
-                .borders('│')
-                .separators(&[LinePosition::Top], LineSeparator::new('─', '┬', '┌', '┐'))
-                .separators(&[LinePosition::Title], LineSeparator::new('─', '┼', '├', '┤'))
-                .separators(&[LinePosition::Bottom], LineSeparator::new('─', '┴', '└', '┘'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::Sharp => TableFormatBuilder::new()
+                .col_sep('│')
+                .row_seps(
+                    RowSep::new('─', '┌', '┬', '┐'),
+                    RowSep::new('─', '├', '┼', '┤'),
+                    None,
+                    RowSep::new('─', '└', '┴', '┘'),
+                )
                 .build(),
-            Border::Rounded => FormatBuilder::new()
-                .column_separator('│')
-                .borders('│')
-                .separators(&[LinePosition::Top], LineSeparator::new('─', '┬', '╭', '╮'))
-                .separators(&[LinePosition::Title], LineSeparator::new('─', '┼', '├', '┤'))
-                .separators(&[LinePosition::Bottom], LineSeparator::new('─', '┴', '╰', '╯'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::Rounded => TableFormatBuilder::new()
+                .col_sep('│')
+                .row_seps(
+                    RowSep::new('─', '╭', '┬', '╮'),
+                    RowSep::new('─', '├', '┼', '┤'),
+                    None,
+                    RowSep::new('─', '╰', '┴', '╯'),
+                )
                 .build(),
-            Border::Reinforced => FormatBuilder::new()
-                .column_separator('│')
-                .borders('│')
-                .separators(&[LinePosition::Top], LineSeparator::new('─', '┬', '┏', '┓'))
-                .separators(&[LinePosition::Title], LineSeparator::new('─', '┼', '├', '┤'))
-                .separators(&[LinePosition::Bottom], LineSeparator::new('─', '┴', '┗', '┛'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::Reinforced => TableFormatBuilder::new()
+                .col_sep('│')
+                .row_seps(
+                    RowSep::new('─', '┏', '┬', '┓'),
+                    RowSep::new('─', '├', '┼', '┤'),
+                    None,
+                    RowSep::new('─', '┗', '┴', '┛'),
+                )
                 .build(),
-            Border::Markdown => FormatBuilder::new()
-                .column_separator('|')
-                .borders('|')
-                .separators(&[LinePosition::Title], LineSeparator::new('-', '|', '|', '|'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::Markdown => TableFormatBuilder::new()
+                .col_sep('|')
+                .row_seps(None, RowSep::new('-', '|', '|', '|'), None, None)
                 .build(),
-            Border::Grid => FormatBuilder::new()
-                .column_separator('│')
-                .borders('│')
-                .separators(&[LinePosition::Top], LineSeparator::new('─', '┬', '┌', '┐'))
-                .separators(&[LinePosition::Intern], LineSeparator::new('─', '┼', '├', '┤'))
-                .separators(&[LinePosition::Bottom], LineSeparator::new('─', '┴', '└', '┘'))
-                .hide_bottom_sep_when_empty(true)
-                .padding(1, 1)
+            Border::Grid => TableFormatBuilder::new()
+                .col_sep('│')
+                .row_seps(
+                    RowSep::new('─', '┌', '┬', '┐'),
+                    RowSep::new('─', '├', '┼', '┤'),
+                    RowSep::new('─', '├', '┼', '┤'),
+                    RowSep::new('─', '└', '┴', '┘'),
+                )
                 .build(),
         }
     }
