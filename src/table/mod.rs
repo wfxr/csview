@@ -1,8 +1,6 @@
-mod cell;
 mod row;
 mod style;
 
-use cell::Cell;
 use csv::{Reader, StringRecord};
 use row::Row;
 use std::io::{self, Result, Write};

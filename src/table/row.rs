@@ -1,16 +1,18 @@
 use std::io::{Result, Write};
 
-use crate::table::{Cell, Style};
+use unicode_truncate::{Alignment, UnicodeTruncateStr};
+
+use crate::table::Style;
 
 /// Represent a table row made of cells
 #[derive(Clone, Debug)]
 pub struct Row<'a> {
-    cells: Vec<Cell<'a>>,
+    cells: Vec<&'a str>,
 }
 
 impl<'a> FromIterator<&'a str> for Row<'a> {
     fn from_iter<I: IntoIterator<Item = &'a str>>(iter: I) -> Self {
-        Self { cells: iter.into_iter().map(Cell::new).collect() }
+        Self { cells: iter.into_iter().collect() }
     }
 }
 
@@ -22,7 +24,7 @@ impl<'a> Row<'a> {
         self.cells
             .iter()
             .zip(widths)
-            .map(|(cell, &width)| cell.unicode_pad(width))
+            .map(|(cell, &width)| cell.unicode_pad(width, Alignment::Left, true))
             .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding))
             .intersperse(sep)
             .try_for_each(|s| write!(wtr, "{}", s))?;
