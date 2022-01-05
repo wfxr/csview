@@ -1,6 +1,6 @@
 [package]
 name = "csview"
-version = "1.0.0-rc"
+version = "1.0.0-rc.1"
 authors = ["Wenxuan Zhang <wenxuangm@gmail.com>"]
 description="A high performance csv viewer with cjk/emoji support."
 categories = ["command-line-utilities"]
