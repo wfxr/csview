@@ -35,11 +35,6 @@ set edit:completion:arg-completer[csview] = [@words]{
             cand --no-headers 'Specify that the input has no header row'
             cand -t 'Use ''\t'' as delimiter for tsv'
             cand --tsv 'Use ''\t'' as delimiter for tsv'
-            cand completion 'Generate shell completion file'
-        }
-        &'csview;completion'= {
-            cand -h 'Print help information'
-            cand --help 'Print help information'
         }
     ]
     $completions[$command]

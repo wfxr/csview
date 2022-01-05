@@ -33,38 +33,13 @@ _csview() {
 '(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
 '(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
 '::FILE -- File to view:_files' \
-":: :_csview_commands" \
-"*::: :->csview" \
 && ret=0
-    case $state in
-    (csview)
-        words=($line[2] "${words[@]}")
-        (( CURRENT += 1 ))
-        curcontext="${curcontext%:*:*}:csview-command-$line[2]:"
-        case $line[2] in
-            (completion)
-_arguments "${_arguments_options[@]}" \
-'-h[Print help information]' \
-'--help[Print help information]' \
-':shell -- Target shell name:(bash elvish fish powershell zsh)' \
-&& ret=0
-;;
-        esac
-    ;;
-esac
 }
 
 (( $+functions[_csview_commands] )) ||
 _csview_commands() {
-    local commands; commands=(
-'completion:Generate shell completion file' \
-    )
-    _describe -t commands 'csview commands' commands "$@"
-}
-(( $+functions[_csview__completion_commands] )) ||
-_csview__completion_commands() {
     local commands; commands=()
-    _describe -t commands 'csview completion commands' commands "$@"
+    _describe -t commands 'csview commands' commands "$@"
 }
 
 _csview "$@"

@@ -4,8 +4,8 @@ mod cli;
 mod table;
 mod util;
 
-use clap::{IntoApp, Parser};
-use cli::{App, Subcommand};
+use clap::Parser;
+use cli::App;
 use csv::{ErrorKind, ReaderBuilder};
 use std::{
     fs::File,
@@ -57,37 +57,29 @@ fn main() {
 }
 
 fn try_main() -> anyhow::Result<()> {
-    let app: App = App::parse();
-    match app {
-        App { subcommand: Some(Subcommand::Completion { shell }), .. } => {
-            let app = &mut App::into_app();
-            clap_complete::generate(shell, app, app.get_name().to_string(), &mut io::stdout())
-        }
-        App {
-            file,
-            no_headers,
-            tsv,
-            delimiter,
-            style,
-            padding,
-            indent,
-            sniff,
-            ..
-        } => {
-            let stdout = io::stdout();
-            let wtr = &mut BufWriter::new(stdout.lock());
-            let rdr = ReaderBuilder::new()
-                .delimiter(if tsv { b'\t' } else { delimiter as u8 })
-                .has_headers(!no_headers)
-                .from_reader(match file {
-                    Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
-                    None => Box::new(io::stdin()),
-                });
+    let App {
+        file,
+        no_headers,
+        tsv,
+        delimiter,
+        style,
+        padding,
+        indent,
+        sniff,
+    } = App::parse();
 
-            let sniff = if sniff == 0 { usize::MAX } else { sniff };
-            let table = Table::new(rdr, sniff)?;
-            table.writeln(wtr, &table_style(style, padding, indent))?;
-        }
-    }
+    let stdout = io::stdout();
+    let wtr = &mut BufWriter::new(stdout.lock());
+    let rdr = ReaderBuilder::new()
+        .delimiter(if tsv { b'\t' } else { delimiter as u8 })
+        .has_headers(!no_headers)
+        .from_reader(match file {
+            Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
+            None => Box::new(io::stdin()),
+        });
+
+    let sniff = if sniff == 0 { usize::MAX } else { sniff };
+    let table = Table::new(rdr, sniff)?;
+    table.writeln(wtr, &table_style(style, padding, indent))?;
     Ok(())
 }

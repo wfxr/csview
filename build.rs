@@ -1,4 +1,5 @@
 use clap::{ArgEnum, IntoApp};
+use clap_complete::Shell;
 use std::{fs, path::Path};
 
 include!("src/cli.rs");

@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use clap::{AppSettings, Parser, ValueHint};
-use clap_complete::Shell;
 use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 
 #[derive(Parser)]
@@ -41,20 +40,6 @@ pub struct App {
     /// Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit.
     #[clap(long, default_value_t = 1000, name = "LIMIT")]
     pub sniff: usize,
-
-    /// Subcommand
-    #[clap(subcommand)]
-    pub subcommand: Option<Subcommand>,
-}
-
-#[derive(Parser)]
-pub enum Subcommand {
-    /// Generate shell completion file.
-    Completion {
-        /// Target shell name.
-        #[clap(arg_enum)]
-        shell: Shell,
-    },
 }
 
 #[derive(Display, EnumString, EnumVariantNames)]

@@ -21,7 +21,6 @@ build = "build.rs"
 [dependencies]
 csv = "1.1"
 clap = { version = "3", features = ["wrap_help", "derive"] }
-clap_complete = "3"
 strum = { version = "0.23", features = ["derive"] }
 exitcode = "1.1"
 anyhow = "1.0"

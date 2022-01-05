@@ -12,9 +12,6 @@ _csview() {
             "$1")
                 cmd="csview"
                 ;;
-            completion)
-                cmd+="__completion"
-                ;;
             *)
                 ;;
         esac
@@ -22,7 +19,7 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts="-h -V -H -t -d -s -p -i --help --version --no-headers --tsv --delimiter --style --padding --indent --sniff <FILE> completion"
+            opts="-h -V -H -t -d -s -p -i --help --version --no-headers --tsv --delimiter --style --padding --indent --sniff <FILE>"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -64,20 +61,6 @@ _csview() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                *)
-                    COMPREPLY=()
-                    ;;
-            esac
-            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-            return 0
-            ;;
-        csview__completion)
-            opts="-h --help bash elvish fish powershell zsh"
-            if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
-                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-                return 0
-            fi
-            case "${prev}" in
                 *)
                     COMPREPLY=()
                     ;;
