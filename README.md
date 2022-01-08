@@ -36,28 +36,28 @@ Year,Make,Model,Description,Price
 1996,Jeep,Grand Cherokee,"MUST SELL! air, moon roof",4799.00
 
 $ csview example.csv
-+------+-------+-----------------------------------+---------------------------+---------+
-| Year | Make  | Model                             | Description               | Price   |
-+------+-------+-----------------------------------+---------------------------+---------+
-| 1997 | Ford  | E350                              | ac, abs, moon             | 3000.00 |
-| 1999 | Chevy | Venture "Extended Edition"        |                           | 4900.00 |
-| 1999 | Chevy | Venture "Extended Edition, Large" |                           | 5000.00 |
-| 1996 | Jeep  | Grand Cherokee                    | MUST SELL! air, moon roof | 4799.00 |
-+------+-------+-----------------------------------+---------------------------+---------+
+┌──────┬───────┬───────────────────────────────────┬───────────────────────────┬─────────┐
+│ Year │ Make  │ Model                             │ Description               │ Price   │
+├──────┼───────┼───────────────────────────────────┼───────────────────────────┼─────────┤
+│ 1997 │ Ford  │ E350                              │ ac, abs, moon             │ 3000.00 │
+│ 1999 │ Chevy │ Venture "Extended Edition"        │                           │ 4900.00 │
+│ 1999 │ Chevy │ Venture "Extended Edition, Large" │                           │ 5000.00 │
+│ 1996 │ Jeep  │ Grand Cherokee                    │ MUST SELL! air, moon roof │ 4799.00 │
+└──────┴───────┴───────────────────────────────────┴───────────────────────────┴─────────┘
 
-$ head -n10 /etc/passwd | csview --no-headers -d:
-+------------------------+---+-------+-------+----------------------------+-----------------+
-| root                   | x | 0     | 0     |                            | /root           |
-| bin                    | x | 1     | 1     |                            | /               |
-| daemon                 | x | 2     | 2     |                            | /               |
-| mail                   | x | 8     | 12    |                            | /var/spool/mail |
-| ftp                    | x | 14    | 11    |                            | /srv/ftp        |
-| http                   | x | 33    | 33    |                            | /srv/http       |
-| nobody                 | x | 65534 | 65534 | Nobody                     | /               |
-| dbus                   | x | 81    | 81    | System Message Bus         | /               |
-| systemd-journal-remote | x | 982   | 982   | systemd Journal Remote     | /               |
-| systemd-network        | x | 981   | 981   | systemd Network Management | /               |
-+------------------------+---+-------+-------+----------------------------+-----------------+
+$ head /etc/passwd | csview -H -d:
+┌────────────────────────┬───┬───────┬───────┬────────────────────────────┬─────────────────┐
+│ root                   │ x │ 0     │ 0     │                            │ /root           │
+│ bin                    │ x │ 1     │ 1     │                            │ /               │
+│ daemon                 │ x │ 2     │ 2     │                            │ /               │
+│ mail                   │ x │ 8     │ 12    │                            │ /var/spool/mail │
+│ ftp                    │ x │ 14    │ 11    │                            │ /srv/ftp        │
+│ http                   │ x │ 33    │ 33    │                            │ /srv/http       │
+│ nobody                 │ x │ 65534 │ 65534 │ Nobody                     │ /               │
+│ dbus                   │ x │ 81    │ 81    │ System Message Bus         │ /               │
+│ systemd-journal-remote │ x │ 981   │ 981   │ systemd Journal Remote     │ /               │
+│ systemd-network        │ x │ 980   │ 980   │ systemd Network Management │ /               │
+└────────────────────────┴───┴───────┴───────┴────────────────────────────┴─────────────────┘
 ```
 
 Run `csview --help` to view detailed usage.
