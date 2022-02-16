@@ -111,7 +111,7 @@ Pre-built versions of `csview` for various architectures are available at [Githu
 
 #### From source
 
-`csview` is also published on [crates.io](https://crates.io). If you have Rust toolchains (nightly) installed you can use `cargo` to install it from source:
+`csview` is also published on [crates.io](https://crates.io). If you have latest Rust toolchains installed you can use `cargo` to install it from source:
 
 ```
 cargo install --locked csview
