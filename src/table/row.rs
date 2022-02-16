@@ -1,5 +1,6 @@
 use std::io::{Result, Write};
 
+use itertools::Itertools;
 use unicode_truncate::{Alignment, UnicodeTruncateStr};
 
 use crate::table::Style;
@@ -21,13 +22,15 @@ impl<'a> Row<'a> {
         let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
         fmt.colseps.lhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
-        self.cells
-            .iter()
-            .zip(widths)
-            .map(|(cell, &width)| cell.unicode_pad(width, Alignment::Left, true))
-            .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding))
-            .intersperse(sep)
-            .try_for_each(|s| write!(wtr, "{}", s))?;
+        Itertools::intersperse(
+            self.cells
+                .iter()
+                .zip(widths)
+                .map(|(cell, &width)| cell.unicode_pad(width, Alignment::Left, true))
+                .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding)),
+            sep,
+        )
+        .try_for_each(|s| write!(wtr, "{}", s))?;
         fmt.colseps.rhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
         Ok(())
     }
