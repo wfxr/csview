@@ -77,7 +77,6 @@ yay -S csview
 You can install `csview` with Homebrew:
 
 ```
-brew tap wfxr/csview
 brew install csview
 ```
 
