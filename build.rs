@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .or_else(|| std::env::var_os("OUT_DIR"))
         .expect("OUT_DIR not found");
     let outdir_path = Path::new(&outdir);
-    let app = &mut App::into_app();
+    let app = &mut App::command();
 
     for shell in Shell::value_variants() {
         let dir = outdir_path.join(shell.to_string());

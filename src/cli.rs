@@ -6,8 +6,8 @@ use strum::{Display, EnumString, EnumVariantNames, VariantNames};
 #[derive(Parser)]
 #[clap(about, version)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
-#[clap(global_setting(AppSettings::DisableHelpSubcommand))]
-#[clap(global_setting(AppSettings::NextLineHelp))]
+#[clap(disable_help_subcommand = true)]
+#[clap(next_line_help = true)]
 pub struct App {
     /// File to view.
     #[clap(name = "FILE", value_hint = ValueHint::FilePath)]
