@@ -33,6 +33,8 @@ set edit:completion:arg-completer[csview] = {|@words|
             cand --version 'Print version information'
             cand -H 'Specify that the input has no header row'
             cand --no-headers 'Specify that the input has no header row'
+            cand -n 'Prepend a column of line numbers to the table'
+            cand --number 'Prepend a column of line numbers to the table'
             cand -t 'Use ''\t'' as delimiter for tsv'
             cand --tsv 'Use ''\t'' as delimiter for tsv'
         }
