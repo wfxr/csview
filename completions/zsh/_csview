@@ -30,6 +30,8 @@ _csview() {
 '--version[Print version information]' \
 '-H[Specify that the input has no header row]' \
 '--no-headers[Specify that the input has no header row]' \
+'-n[Prepend a column of line numbers to the table]' \
+'--number[Prepend a column of line numbers to the table]' \
 '(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
 '(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
 '::FILE -- File to view:_files' \

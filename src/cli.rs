@@ -17,6 +17,10 @@ pub struct App {
     #[clap(short = 'H', long = "no-headers")]
     pub no_headers: bool,
 
+    /// Prepend a column of line numbers to the table.
+    #[clap(short, long, alias = "seq")]
+    pub number: bool,
+
     /// Use '\t' as delimiter for tsv.
     #[clap(short, long, conflicts_with = "delimiter")]
     pub tsv: bool,

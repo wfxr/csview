@@ -6,4 +6,5 @@ complete -c csview -l sniff -d 'Limit column widths sniffing to the specified nu
 complete -c csview -s h -l help -d 'Print help information'
 complete -c csview -s V -l version -d 'Print version information'
 complete -c csview -s H -l no-headers -d 'Specify that the input has no header row'
+complete -c csview -s n -l number -d 'Prepend a column of line numbers to the table'
 complete -c csview -s t -l tsv -d 'Use \'\\t\' as delimiter for tsv'
