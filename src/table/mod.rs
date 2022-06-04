@@ -9,8 +9,8 @@ use unicode_width::UnicodeWidthStr;
 pub use style::{RowSep, Style, StyleBuilder};
 
 pub struct Table {
-    header:  Option<StringRecord>,
-    widths:  Vec<usize>,
+    header: Option<StringRecord>,
+    widths: Vec<usize>,
     records: Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
 }
 
@@ -116,7 +116,7 @@ mod test {
 +---+---+---+
 "
             .trim_start(),
-            std::str::from_utf8(&mut buf)?
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -142,7 +142,7 @@ mod test {
 +-+-+-+
 "
             .trim_start(),
-            std::str::from_utf8(&mut buf)?
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -168,7 +168,7 @@ mod test {
     +---+---+---+
 "
             .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -190,7 +190,7 @@ mod test {
 +---+----+-----+
 "
             .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -221,7 +221,7 @@ mod test {
 ╰─────┴─────┴─────╯
 "
             .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
