@@ -9,8 +9,8 @@ use unicode_width::UnicodeWidthStr;
 pub use style::{RowSep, Style, StyleBuilder};
 
 pub struct Table {
-    header:  Option<StringRecord>,
-    widths:  Vec<usize>,
+    header: Option<StringRecord>,
+    widths: Vec<usize>,
     records: Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
 }
 
@@ -96,6 +96,14 @@ mod test {
     use anyhow::Result;
     use csv::ReaderBuilder;
 
+    macro_rules! gen_table {
+        ($($line:expr)*) => {
+            concat!(
+                $($line, "\n",)*
+            )
+        };
+    }
+
     #[test]
     fn test_write() -> Result<()> {
         let text = "a,b,c\n1,2,3\n4,5,6";
@@ -106,17 +114,16 @@ mod test {
         wtr.writeln(&mut buf, &Style::default())?;
 
         assert_eq!(
-            "
-+---+---+---+
-| a | b | c |
-+---+---+---+
-| 1 | 2 | 3 |
-+---+---+---+
-| 4 | 5 | 6 |
-+---+---+---+
-"
-            .trim_start(),
-            std::str::from_utf8(&mut buf)?
+            gen_table!(
+                "+---+---+---+"
+                "| a | b | c |"
+                "+---+---+---+"
+                "| 1 | 2 | 3 |"
+                "+---+---+---+"
+                "| 4 | 5 | 6 |"
+                "+---+---+---+"
+            ),
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -132,17 +139,16 @@ mod test {
         wtr.writeln(&mut buf, &fmt)?;
 
         assert_eq!(
-            "
-+-+-+-+
-|a|b|c|
-+-+-+-+
-|1|2|3|
-+-+-+-+
-|4|5|6|
-+-+-+-+
-"
-            .trim_start(),
-            std::str::from_utf8(&mut buf)?
+            gen_table!(
+                "+-+-+-+"
+                "|a|b|c|"
+                "+-+-+-+"
+                "|1|2|3|"
+                "+-+-+-+"
+                "|4|5|6|"
+                "+-+-+-+"
+            ),
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -158,17 +164,16 @@ mod test {
         wtr.writeln(&mut buf, &fmt)?;
 
         assert_eq!(
-            "
-    +---+---+---+
-    | a | b | c |
-    +---+---+---+
-    | 1 | 2 | 3 |
-    +---+---+---+
-    | 4 | 5 | 6 |
-    +---+---+---+
-"
-            .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            gen_table!(
+                "    +---+---+---+"
+                "    | a | b | c |"
+                "    +---+---+---+"
+                "    | 1 | 2 | 3 |"
+                "    +---+---+---+"
+                "    | 4 | 5 | 6 |"
+                "    +---+---+---+"
+            ),
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -184,13 +189,12 @@ mod test {
         wtr.writeln(&mut buf, &fmt)?;
 
         assert_eq!(
-            "
-+---+----+-----+
-| a | ab | abc |
-+---+----+-----+
-"
-            .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            gen_table!(
+                "+---+----+-----+"
+                "| a | ab | abc |"
+                "+---+----+-----+"
+            ),
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
@@ -214,14 +218,13 @@ mod test {
         wtr.writeln(&mut buf, &fmt)?;
 
         assert_eq!(
-            "
-╭─────┬─────┬─────╮
-│ 1   │ 123 │ 35  │
-│ 383 │ 2   │  17 │
-╰─────┴─────┴─────╯
-"
-            .trim_start_matches(|c: char| c == '\n'),
-            std::str::from_utf8(&mut buf)?
+            gen_table!(
+                "╭─────┬─────┬─────╮"
+                "│ 1   │ 123 │ 35  │"
+                "│ 383 │ 2   │  17 │"
+                "╰─────┴─────┴─────╯"
+            ),
+            std::str::from_utf8(&buf)?
         );
         Ok(())
     }
