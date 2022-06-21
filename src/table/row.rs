@@ -27,7 +27,7 @@ impl<'a> Row<'a> {
                 .iter()
                 .zip(widths)
                 .map(|(cell, &width)| cell.unicode_pad(width, Alignment::Left, true))
-                .map(|s| format!("{:pad$}{s}{:pad$}", "", "", pad = fmt.padding)),
+                .map(|s| format!("{:pad$}{}{:pad$}", "", s, "", pad = fmt.padding)),
             sep,
         )
         .try_for_each(|s| write!(wtr, "{}", s))?;
