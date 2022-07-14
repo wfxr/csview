@@ -17,8 +17,8 @@ _csview() {
     _arguments "${_arguments_options[@]}" \
 '-d+[Specify the field delimiter]:DELIMITER: ' \
 '--delimiter=[Specify the field delimiter]:DELIMITER: ' \
-'-s+[Specify the border style]:STYLE:(None Ascii Sharp Rounded Reinforced Markdown Grid)' \
-'--style=[Specify the border style]:STYLE:(None Ascii Sharp Rounded Reinforced Markdown Grid)' \
+'-s+[Specify the border style]:STYLE:(None Ascii Ascii2 Sharp Rounded Reinforced Markdown Grid)' \
+'--style=[Specify the border style]:STYLE:(None Ascii Ascii2 Sharp Rounded Reinforced Markdown Grid)' \
 '-p+[Specify padding for table cell]:PADDING: ' \
 '--padding=[Specify padding for table cell]:PADDING: ' \
 '-i+[Specify global indent for table]:INDENT: ' \

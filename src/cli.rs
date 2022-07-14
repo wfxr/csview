@@ -51,6 +51,7 @@ pub struct App {
 pub enum TableStyle {
     None,
     Ascii,
+    Ascii2,
     Sharp,
     Rounded,
     Reinforced,

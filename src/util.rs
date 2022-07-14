@@ -12,6 +12,10 @@ pub fn table_style(style: TableStyle, padding: usize, indent: usize) -> Style {
             None,
             RowSep::new('-', '+', '+', '+'),
         ),
+        TableStyle::Ascii2 =>
+            StyleBuilder::new()
+                .col_seps(' ', '|', ' ')
+                .row_seps(None, RowSep::new('-', ' ', '+', ' '), None, None),
         TableStyle::Sharp => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '┌', '┬', '┐'),
             RowSep::new('─', '├', '┼', '┤'),

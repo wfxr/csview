@@ -1,5 +1,5 @@
 complete -c csview -s d -l delimiter -d 'Specify the field delimiter' -r
-complete -c csview -s s -l style -d 'Specify the border style' -r -f -a "{None	,Ascii	,Sharp	,Rounded	,Reinforced	,Markdown	,Grid	}"
+complete -c csview -s s -l style -d 'Specify the border style' -r -f -a "{None	,Ascii	,Ascii2	,Sharp	,Rounded	,Reinforced	,Markdown	,Grid	}"
 complete -c csview -s p -l padding -d 'Specify padding for table cell' -r
 complete -c csview -s i -l indent -d 'Specify global indent for table' -r
 complete -c csview -l sniff -d 'Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit' -r
