@@ -44,6 +44,14 @@ pub struct App {
     /// Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit.
     #[clap(long, default_value_t = 1000, name = "LIMIT")]
     pub sniff: usize,
+
+    /// Specify the alignment of the table header.
+    #[clap(long, default_value_t = Alignment::Center, possible_values = Alignment::VARIANTS, ignore_case = true)]
+    pub header_align: Alignment,
+
+    /// Specify the alignment of the table body.
+    #[clap(long, default_value_t = Alignment::Left, possible_values = Alignment::VARIANTS, ignore_case = true)]
+    pub body_align: Alignment,
 }
 
 #[derive(Display, EnumString, EnumVariantNames)]
@@ -57,4 +65,12 @@ pub enum TableStyle {
     Reinforced,
     Markdown,
     Grid,
+}
+
+#[derive(Display, EnumString, EnumVariantNames)]
+#[strum(ascii_case_insensitive)]
+pub enum Alignment {
+    Left,
+    Center,
+    Right,
 }
