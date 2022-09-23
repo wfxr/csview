@@ -55,7 +55,7 @@ pub struct App {
 }
 
 #[derive(Display, EnumString, EnumVariantNames)]
-#[strum(ascii_case_insensitive)]
+#[strum(ascii_case_insensitive, serialize_all = "lowercase")]
 pub enum TableStyle {
     None,
     Ascii,
@@ -68,7 +68,7 @@ pub enum TableStyle {
 }
 
 #[derive(Display, EnumString, EnumVariantNames)]
-#[strum(ascii_case_insensitive)]
+#[strum(ascii_case_insensitive, serialize_all = "lowercase")]
 pub enum Alignment {
     Left,
     Center,
