@@ -1,5 +1,7 @@
 use std::io::{Result, Write};
 
+use unicode_truncate::Alignment;
+
 #[derive(Debug, Clone, Copy)]
 pub struct RowSeps {
     /// Top separator row (top border)
@@ -123,15 +125,23 @@ pub struct Style {
 
     /// Global indentation
     pub indent: usize,
+
+    /// Header alignment
+    pub header_align: Alignment,
+
+    /// Data alignment
+    pub body_align: Alignment,
 }
 
 impl Default for Style {
     fn default() -> Self {
         Self {
-            indent:  0,
-            padding: 1,
-            colseps: ColSeps::default(),
-            rowseps: RowSeps::default(),
+            indent:       0,
+            padding:      1,
+            colseps:      ColSeps::default(),
+            rowseps:      RowSeps::default(),
+            header_align: Alignment::Center,
+            body_align:   Alignment::Left,
         }
     }
 }
@@ -215,6 +225,16 @@ impl StyleBuilder {
 
     pub fn indent(mut self, indent: usize) -> Self {
         self.format.indent = indent;
+        self
+    }
+
+    pub fn header_align(mut self, align: Alignment) -> Self {
+        self.format.header_align = align;
+        self
+    }
+
+    pub fn body_align(mut self, align: Alignment) -> Self {
+        self.format.body_align = align;
         self
     }
 

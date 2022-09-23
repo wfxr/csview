@@ -40,7 +40,7 @@ impl Table {
                 true => iter::once("#").chain(header.into_iter()).collect(),
                 false => header.into_iter().collect(),
             };
-            row.writeln(wtr, fmt, widths)?;
+            row.writeln(wtr, fmt, widths, fmt.header_align)?;
             if iter.peek().is_some() {
                 fmt.rowseps
                     .snd
@@ -55,11 +55,11 @@ impl Table {
                 true => {
                     let seq = seq.to_string();
                     let row: Row = iter::once(seq.as_ref()).chain(record.into_iter()).collect();
-                    row.writeln(wtr, fmt, widths)?;
+                    row.writeln(wtr, fmt, widths, fmt.body_align)?;
                 }
                 false => {
                     let row: Row = record.into_iter().collect();
-                    row.writeln(wtr, fmt, widths)?;
+                    row.writeln(wtr, fmt, widths, fmt.body_align)?;
                 }
             };
             if let Some(mid) = &fmt.rowseps.mid {
