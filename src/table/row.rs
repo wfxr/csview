@@ -18,7 +18,7 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 }
 
 impl<'a> Row<'a> {
-    pub fn write<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize]) -> Result<()> {
+    pub fn write<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize], align: Alignment) -> Result<()> {
         let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
         fmt.colseps.lhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
@@ -26,7 +26,7 @@ impl<'a> Row<'a> {
             self.cells
                 .iter()
                 .zip(widths)
-                .map(|(cell, &width)| cell.unicode_pad(width, Alignment::Left, true))
+                .map(|(cell, &width)| cell.unicode_pad(width, align, true))
                 .map(|s| format!("{:pad$}{}{:pad$}", "", s, "", pad = fmt.padding)),
             sep,
         )
@@ -35,8 +35,8 @@ impl<'a> Row<'a> {
         Ok(())
     }
 
-    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize]) -> Result<()> {
-        self.write(wtr, fmt, widths).and_then(|_| writeln!(wtr))
+    pub fn writeln<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize], align: Alignment) -> Result<()> {
+        self.write(wtr, fmt, widths, align).and_then(|_| writeln!(wtr))
     }
 }
 
@@ -53,7 +53,7 @@ mod test {
         let fmt = Style::default();
         let widths = [3, 4];
 
-        row.writeln(buf, &fmt, &widths)?;
+        row.writeln(buf, &fmt, &widths, Alignment::Left)?;
         assert_eq!("| a   | b    |\n", str::from_utf8(buf)?);
         Ok(())
     }
@@ -65,8 +65,32 @@ mod test {
         let fmt = Style::default();
         let widths = [10, 8, 2];
 
-        row.writeln(buf, &fmt, &widths)?;
+        row.writeln(buf, &fmt, &widths, Alignment::Left)?;
         assert_eq!("| 李磊(Jack) | 四川省成 | 💍 |\n", str::from_utf8(buf)?);
+        Ok(())
+    }
+
+    #[test]
+    fn write_align_center() -> Result<()> {
+        let row = Row::from_iter(["a", "b"]);
+        let buf = &mut Vec::new();
+        let fmt = Style::default();
+        let widths = [3, 4];
+
+        row.writeln(buf, &fmt, &widths, Alignment::Center)?;
+        assert_eq!("|  a  |  b   |\n", str::from_utf8(buf)?);
+        Ok(())
+    }
+
+    #[test]
+    fn write_align_right() -> Result<()> {
+        let row = Row::from_iter(["a", "b"]);
+        let buf = &mut Vec::new();
+        let fmt = Style::default();
+        let widths = [3, 4];
+
+        row.writeln(buf, &fmt, &widths, Alignment::Right)?;
+        assert_eq!("|   a |    b |\n", str::from_utf8(buf)?);
         Ok(())
     }
 }
