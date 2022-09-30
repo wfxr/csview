@@ -108,6 +108,7 @@ fn update_widths<S: AsRef<str>>(record: &StringRecord, widths: &mut Vec<usize>, 
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::table::{RowSep, StyleBuilder};
     use anyhow::Result;
     use csv::ReaderBuilder;
 
