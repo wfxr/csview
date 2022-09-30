@@ -69,26 +69,29 @@ fn sniff_widths<R: io::Read>(
     let mut widths = Vec::new();
     let mut buf = Vec::new();
 
+    fn update_widths(record: &StringRecord, widths: &mut Vec<usize>) {
+        widths.resize(record.len(), 0);
+        record
+            .into_iter()
+            .map(UnicodeWidthStr::width_cjk)
+            .enumerate()
+            .for_each(|(i, width)| widths[i] = widths[i].max(width))
+    }
+
     let mut record = header.cloned().unwrap_or_default();
-    update_widths(&record, &mut widths, with_seq.then_some("#"));
+    update_widths(&record, &mut widths);
 
     let mut seq = 1;
     while seq <= sniff_rows && rdr.read_record(&mut record)? {
-        update_widths(&record, &mut widths, with_seq.then(|| seq.to_string()));
+        update_widths(&record, &mut widths);
         seq += 1;
         buf.push(record.clone());
     }
-    Ok((widths, buf))
-}
 
-fn update_widths<S: AsRef<str>>(record: &StringRecord, widths: &mut Vec<usize>, seq: Option<S>) {
-    let fields = seq.iter().map(|s| s.as_ref()).chain(record);
-    let total_len = record.len() + seq.is_some() as usize;
-    widths.resize(total_len, 0);
-    fields
-        .map(UnicodeWidthStr::width_cjk)
-        .enumerate()
-        .for_each(|(i, width)| widths[i] = widths[i].max(width))
+    if with_seq {
+        widths.insert(0, seq.to_string().width());
+    }
+    Ok((widths, buf))
 }
 
 #[cfg(test)]
