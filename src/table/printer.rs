@@ -1,9 +1,6 @@
 use super::{row::Row, style::Style};
 use csv::{Reader, StringRecord};
-use std::{
-    io::{self, Result, Write},
-    iter,
-};
+use std::io::{self, Result, Write};
 use unicode_width::UnicodeWidthStr;
 
 pub struct TablePrinter {
@@ -31,10 +28,7 @@ impl TablePrinter {
         let mut iter = self.records.peekable();
 
         if let Some(header) = self.header {
-            let row: Row = match self.with_seq {
-                true => iter::once("#").chain(header.into_iter()).collect(),
-                false => header.into_iter().collect(),
-            };
+            let row: Row = self.with_seq.then_some("#").into_iter().chain(header.iter()).collect();
             row.writeln(wtr, fmt, widths, fmt.header_align)?;
             if iter.peek().is_some() {
                 fmt.rowseps
@@ -46,17 +40,9 @@ impl TablePrinter {
 
         let mut seq = 1;
         while let Some(record) = iter.next().transpose()? {
-            match self.with_seq {
-                true => {
-                    let seq = seq.to_string();
-                    let row: Row = iter::once(seq.as_ref()).chain(record.into_iter()).collect();
-                    row.writeln(wtr, fmt, widths, fmt.body_align)?;
-                }
-                false => {
-                    let row: Row = record.into_iter().collect();
-                    row.writeln(wtr, fmt, widths, fmt.body_align)?;
-                }
-            };
+            let seq_str = self.with_seq.then(|| seq.to_string());
+            let row: Row = seq_str.iter().map(|s| s.as_str()).chain(record.into_iter()).collect();
+            row.writeln(wtr, fmt, widths, fmt.body_align)?;
             if let Some(mid) = &fmt.rowseps.mid {
                 if iter.peek().is_some() {
                     fmt.write_row_sep(wtr, widths, mid)?;
