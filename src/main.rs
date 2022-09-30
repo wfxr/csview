@@ -10,7 +10,7 @@ use std::{
     io::{self, BufWriter, Read},
     process,
 };
-use table::Table;
+use table::TablePrinter;
 use util::table_style;
 
 fn main() {
@@ -80,7 +80,7 @@ fn try_main() -> anyhow::Result<()> {
         });
 
     let sniff = if sniff == 0 { usize::MAX } else { sniff };
-    let table = Table::new(rdr, sniff, number)?;
+    let table = TablePrinter::new(rdr, sniff, number)?;
     table.writeln(wtr, &table_style(style, padding, indent, header_align, body_align))?;
     Ok(())
 }
