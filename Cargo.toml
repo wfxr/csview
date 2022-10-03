@@ -30,7 +30,7 @@ itertools = "0.10"
 
 [build-dependencies]
 clap = { version = "3", features = ["wrap_help", "derive"] }
-clap_complete = "3"
+clap_complete = "4"
 strum = { version = "0.24", features = ["derive"] }
 
 [profile.release]
