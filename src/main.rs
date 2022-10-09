@@ -17,7 +17,7 @@ fn main() {
     if let Err(e) = try_main() {
         if let Some(ioerr) = e.root_cause().downcast_ref::<io::Error>() {
             if ioerr.kind() == io::ErrorKind::BrokenPipe {
-                process::exit(0);
+                process::exit(exitcode::OK);
             }
         }
 
@@ -44,7 +44,7 @@ fn main() {
                 }
                 e => {
                     eprintln!("[error] failed to process input: {:?}", e);
-                    process::exit(exitcode::SOFTWARE)
+                    process::exit(exitcode::DATAERR)
                 }
             }
         }
