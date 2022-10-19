@@ -1,12 +1,22 @@
 name: CICD
 
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
 env:
   PROJECT_NAME: csview
   PROJECT_DESC: "A high performance csv viewer with cjk/emoji support."
   PROJECT_MAINTAINER: "Wenxuan Zhang <wenxuangm@gmail.com>"
   PROJECT_HOMEPAGE: "https://github.com/wfxr/csview"
-
-on: [push, pull_request]
 
 jobs:
   build:
