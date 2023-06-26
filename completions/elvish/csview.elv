@@ -27,16 +27,18 @@ set edit:completion:arg-completer[csview] = {|@words|
             cand -i 'Specify global indent for table'
             cand --indent 'Specify global indent for table'
             cand --sniff 'Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit'
-            cand -h 'Print help information'
-            cand --help 'Print help information'
-            cand -V 'Print version information'
-            cand --version 'Print version information'
+            cand --header-align 'Specify the alignment of the table header'
+            cand --body-align 'Specify the alignment of the table body'
             cand -H 'Specify that the input has no header row'
             cand --no-headers 'Specify that the input has no header row'
             cand -n 'Prepend a column of line numbers to the table'
             cand --number 'Prepend a column of line numbers to the table'
             cand -t 'Use ''\t'' as delimiter for tsv'
             cand --tsv 'Use ''\t'' as delimiter for tsv'
+            cand -h 'Print help'
+            cand --help 'Print help'
+            cand -V 'Print version'
+            cand --version 'Print version'
         }
     ]
     $completions[$command]

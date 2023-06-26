@@ -17,23 +17,25 @@ _csview() {
     _arguments "${_arguments_options[@]}" \
 '-d+[Specify the field delimiter]:DELIMITER: ' \
 '--delimiter=[Specify the field delimiter]:DELIMITER: ' \
-'-s+[Specify the border style]:STYLE:(None Ascii Ascii2 Sharp Rounded Reinforced Markdown Grid)' \
-'--style=[Specify the border style]:STYLE:(None Ascii Ascii2 Sharp Rounded Reinforced Markdown Grid)' \
+'-s+[Specify the border style]:STYLE:(none ascii ascii2 sharp rounded reinforced markdown grid)' \
+'--style=[Specify the border style]:STYLE:(none ascii ascii2 sharp rounded reinforced markdown grid)' \
 '-p+[Specify padding for table cell]:PADDING: ' \
 '--padding=[Specify padding for table cell]:PADDING: ' \
 '-i+[Specify global indent for table]:INDENT: ' \
 '--indent=[Specify global indent for table]:INDENT: ' \
 '--sniff=[Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit]:LIMIT: ' \
-'-h[Print help information]' \
-'--help[Print help information]' \
-'-V[Print version information]' \
-'--version[Print version information]' \
+'--header-align=[Specify the alignment of the table header]:HEADER_ALIGN:(left center right)' \
+'--body-align=[Specify the alignment of the table body]:BODY_ALIGN:(left center right)' \
 '-H[Specify that the input has no header row]' \
 '--no-headers[Specify that the input has no header row]' \
 '-n[Prepend a column of line numbers to the table]' \
 '--number[Prepend a column of line numbers to the table]' \
 '(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
 '(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
 '::FILE -- File to view:_files' \
 && ret=0
 }
@@ -44,4 +46,8 @@ _csview_commands() {
     _describe -t commands 'csview commands' commands "$@"
 }
 
-_csview "$@"
+if [ "$funcstack[1]" = "_csview" ]; then
+    _csview "$@"
+else
+    compdef _csview csview
+fi
