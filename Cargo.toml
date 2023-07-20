@@ -12,7 +12,7 @@ keywords = [
     "tool",
 ]
 readme = "README.md"
-license = "MIT/Apache-2.0"
+license = "MIT OR Apache-2.0"
 exclude = ["/completions"]
 repository = "https://github.com/wfxr/csview"
 edition = "2021"
