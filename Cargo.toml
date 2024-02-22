@@ -2,15 +2,10 @@
 name = "csview"
 version = "1.2.2"
 authors = ["Wenxuan Zhang <wenxuangm@gmail.com>"]
-description="A high performance csv viewer with cjk/emoji support."
+description = "A high performance csv viewer with cjk/emoji support."
 categories = ["command-line-utilities"]
 homepage = "https://github.com/wfxr/csview"
-keywords = [
-    "csv",
-    "pager",
-    "viewer",
-    "tool",
-]
+keywords = ["csv", "pager", "viewer", "tool"]
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 exclude = ["/completions"]

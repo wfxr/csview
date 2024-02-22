@@ -32,7 +32,7 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
             [CompletionResult]::new('--sniff', 'sniff', [CompletionResultType]::ParameterName, 'Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit')
             [CompletionResult]::new('--header-align', 'header-align', [CompletionResultType]::ParameterName, 'Specify the alignment of the table header')
             [CompletionResult]::new('--body-align', 'body-align', [CompletionResultType]::ParameterName, 'Specify the alignment of the table body')
-            [CompletionResult]::new('-H', 'H', [CompletionResultType]::ParameterName, 'Specify that the input has no header row')
+            [CompletionResult]::new('-H', 'H ', [CompletionResultType]::ParameterName, 'Specify that the input has no header row')
             [CompletionResult]::new('--no-headers', 'no-headers', [CompletionResultType]::ParameterName, 'Specify that the input has no header row')
             [CompletionResult]::new('-n', 'n', [CompletionResultType]::ParameterName, 'Prepend a column of line numbers to the table')
             [CompletionResult]::new('--number', 'number', [CompletionResultType]::ParameterName, 'Prepend a column of line numbers to the table')
@@ -40,7 +40,7 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
             [CompletionResult]::new('--tsv', 'tsv', [CompletionResultType]::ParameterName, 'Use ''\t'' as delimiter for tsv')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help')
-            [CompletionResult]::new('-V', 'V', [CompletionResultType]::ParameterName, 'Print version')
+            [CompletionResult]::new('-V', 'V ', [CompletionResultType]::ParameterName, 'Print version')
             [CompletionResult]::new('--version', 'version', [CompletionResultType]::ParameterName, 'Print version')
             break
         }
