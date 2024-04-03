@@ -2,6 +2,7 @@ mod cli;
 mod table;
 mod util;
 
+use anyhow::bail;
 use clap::Parser;
 use cli::App;
 use csv::{ErrorKind, ReaderBuilder};
@@ -76,6 +77,7 @@ fn try_main() -> anyhow::Result<()> {
         .has_headers(!no_headers)
         .from_reader(match file {
             Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
+            None if atty::is(atty::Stream::Stdin) => bail!("no input file specified (use -h for help)"),
             None => Box::new(io::stdin()),
         });
 
