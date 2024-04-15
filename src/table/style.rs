@@ -136,12 +136,12 @@ pub struct Style {
 impl Default for Style {
     fn default() -> Self {
         Self {
-            indent:       0,
-            padding:      1,
-            colseps:      ColSeps::default(),
-            rowseps:      RowSeps::default(),
+            indent: 0,
+            padding: 1,
+            colseps: ColSeps::default(),
+            rowseps: RowSeps::default(),
             header_align: Alignment::Center,
-            body_align:   Alignment::Left,
+            body_align: Alignment::Left,
         }
     }
 }
