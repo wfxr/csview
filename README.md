@@ -156,12 +156,6 @@ If you want the latest version, clone this repository and run `cargo build --rel
 `csview` is designed for formatting and viewing. See also: [xsv/issues/156](https://github.com/BurntSushi/xsv/issues/156)
 
 ---
-#### Things look weird if the width of table is more than the width of terminal window.
-
-Use pager less with -S option: `csview a.csv | less -S` so you can scroll screen horizontally.
-Or use [xsv](https://github.com/BurntSushi/xsv) to filter out the columns you don't care then piped to csview.
-
----
 #### I encountered UTF-8 related errors, how to solve it?
 
 The file may use a non-UTF8 encoding. You can check the file encoding using `file` command:
