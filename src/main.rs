@@ -8,7 +8,7 @@ use cli::App;
 use csv::{ErrorKind, ReaderBuilder};
 use std::{
     fs::File,
-    io::{self, BufWriter, Read},
+    io::{self, BufWriter, IsTerminal, Read},
     process,
 };
 use table::TablePrinter;
@@ -86,7 +86,7 @@ fn try_main() -> anyhow::Result<()> {
         .has_headers(!no_headers)
         .from_reader(match file {
             Some(path) => Box::new(File::open(path)?) as Box<dyn Read>,
-            None if atty::is(atty::Stream::Stdin) => bail!("no input file specified (use -h for help)"),
+            None if io::stdin().is_terminal() => bail!("no input file specified (use -h for help)"),
             None => Box::new(io::stdin()),
         });
 

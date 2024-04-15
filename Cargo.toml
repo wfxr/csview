@@ -25,7 +25,6 @@ anyhow = "1.0"
 unicode-width = "0"
 unicode-truncate = "0"
 itertools = "0.12"
-atty = "0.2"
 [target.'cfg(target_family = "unix")'.dependencies]
 pager = { version = "0.16", optional = true }
 
