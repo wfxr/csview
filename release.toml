@@ -1,0 +1,7 @@
+allow-branch = ["main"]
+pre-release-replacements = [
+    { file = "README.md", search = "rlt = .*", replace = "{{crate_name}} = \"{{version}}\"" },
+]
+pre-release-hook = ["git", "cliff", "-o", "CHANGELOG.md", "--tag", "{{version}}" ]
+pre-release-commit-message = "chore: release {{crate_name}} version {{version}}"
+tag-message = "chore: release {{crate_name}} version {{version}}"
