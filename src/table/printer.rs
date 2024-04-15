@@ -4,9 +4,9 @@ use std::io::{self, Result, Write};
 use unicode_width::UnicodeWidthStr;
 
 pub struct TablePrinter {
-    header:   Option<StringRecord>,
-    widths:   Vec<usize>,
-    records:  Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
+    header: Option<StringRecord>,
+    widths: Vec<usize>,
+    records: Box<dyn Iterator<Item = csv::Result<StringRecord>>>,
     with_seq: bool,
 }
 
