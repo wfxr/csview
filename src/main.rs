@@ -14,6 +14,9 @@ use std::{
 use table::TablePrinter;
 use util::table_style;
 
+#[cfg(all(feature = "pager", unix))]
+use pager::Pager;
+
 fn main() {
     if let Err(e) = try_main() {
         if let Some(ioerr) = e.root_cause().downcast_ref::<io::Error>() {
@@ -56,6 +59,12 @@ fn main() {
 }
 
 fn try_main() -> anyhow::Result<()> {
+    #[cfg(all(feature = "pager", unix))]
+    match std::env::var("CSVIEW_PAGER") {
+        Ok(pager) => Pager::with_pager(&pager).setup(),
+        Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF"]).setup(),
+    }
+
     let App {
         file,
         no_headers,
