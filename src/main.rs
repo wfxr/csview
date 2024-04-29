@@ -59,12 +59,6 @@ fn main() {
 }
 
 fn try_main() -> anyhow::Result<()> {
-    #[cfg(all(feature = "pager", unix))]
-    match std::env::var("CSVIEW_PAGER") {
-        Ok(pager) => Pager::with_pager(&pager).setup(),
-        Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF"]).setup(),
-    }
-
     let App {
         file,
         no_headers,
@@ -77,7 +71,17 @@ fn try_main() -> anyhow::Result<()> {
         sniff,
         header_align,
         body_align,
+        #[cfg(all(feature = "pager", unix))]
+        disable_pager,
     } = App::parse();
+
+    #[cfg(all(feature = "pager", unix))]
+    if !disable_pager {
+        match std::env::var("CSVIEW_PAGER") {
+            Ok(pager) => Pager::with_pager(&pager).setup(),
+            Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF"]).setup(),
+        }
+    }
 
     let stdout = io::stdout();
     let wtr = &mut BufWriter::new(stdout.lock());
