@@ -1,4 +1,19 @@
-## [1.3.0](https://github.com/wfxr/csview/compare/v1.2.4..1.3.0) (2024-04-15)
+## [1.3.1](https://github.com/wfxr/csview/compare/v1.3.0..1.3.1) (2024-04-29)
+
+### 🚀 Features
+
+- Only enable pager when stdout is a tty - ([420fd03](https://github.com/wfxr/csview/commit/420fd0310db32d42315fc5dcb2b745a4c4cc6909))
+- Allow disabling pager - ([80ae054](https://github.com/wfxr/csview/commit/80ae054283d857814408d186643105b57f7c559d))
+
+### 📚 Documentation
+
+- Remove outdated faq - ([d814a38](https://github.com/wfxr/csview/commit/d814a389eec4a50ee6c0effc19ca601a37ff4395))
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove stale.yml - ([d3ac13b](https://github.com/wfxr/csview/commit/d3ac13b72a6af52cc81ab4482c1db44670fdb307))
+
+## [1.3.0](https://github.com/wfxr/csview/compare/v1.2.4..v1.3.0) (2024-04-15)
 
 ### 🚀 Features
 
@@ -11,6 +26,7 @@
 
 ### ⚙️ Miscellaneous Tasks
 
+- Release csview version 1.3.0 - ([28a09a2](https://github.com/wfxr/csview/commit/28a09a2198d69b94b64d428553e215aa9b3f0808))
 - Update dependencies - ([b9aed24](https://github.com/wfxr/csview/commit/b9aed24bc46e725a6de1c761e3eee2c508ed5338))
 - Fix release.toml - ([8b28b89](https://github.com/wfxr/csview/commit/8b28b89824b54fd110f9b73a24d8d839e8db627b))
 - Add rust-toolchain.toml & update rustfmt.toml ([#201](https://github.com/wfxr/csview/issues/201)) - ([6fc99d4](https://github.com/wfxr/csview/commit/6fc99d432a9a0670430beef1f74e8da5c126e547))
