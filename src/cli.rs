@@ -50,6 +50,11 @@ pub struct App {
     /// Specify the alignment of the table body.
     #[arg(long, value_enum, default_value_t = Alignment::Left, ignore_case = true)]
     pub body_align: Alignment,
+
+    #[cfg(all(feature = "pager", unix))]
+    /// Disable pager.
+    #[arg(long, short = 'P')]
+    pub disable_pager: bool,
 }
 
 #[derive(Copy, Clone, ValueEnum)]
