@@ -76,7 +76,7 @@ fn try_main() -> anyhow::Result<()> {
     } = App::parse();
 
     #[cfg(all(feature = "pager", unix))]
-    if !disable_pager {
+    if !disable_pager && io::stdout().is_terminal() {
         match std::env::var("CSVIEW_PAGER") {
             Ok(pager) => Pager::with_pager(&pager).setup(),
             Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF"]).setup(),
