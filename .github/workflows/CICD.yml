@@ -29,12 +29,12 @@ jobs:
           cargo metadata --no-deps --format-version 1 | jq -r '"description=" + .packages[0].description'  | tee -a $GITHUB_OUTPUT
           cargo metadata --no-deps --format-version 1 | jq -r '"msrv="        + .packages[0].rust_version' | tee -a $GITHUB_OUTPUT
     outputs:
-      name: ${{ steps.crate_metadata.outputs.name }}
-      version: ${{ steps.crate_metadata.outputs.version }}
-      maintainer: ${{ steps.crate_metadata.outputs.maintainer }}
-      homepage: ${{ steps.crate_metadata.outputs.homepage }}
+      name:        ${{ steps.crate_metadata.outputs.name        }}
+      version:     ${{ steps.crate_metadata.outputs.version     }}
+      maintainer:  ${{ steps.crate_metadata.outputs.maintainer  }}
+      homepage:    ${{ steps.crate_metadata.outputs.homepage    }}
       description: ${{ steps.crate_metadata.outputs.description }}
-      msrv: ${{ steps.crate_metadata.outputs.msrv }}
+      msrv:        ${{ steps.crate_metadata.outputs.msrv        }}
 
   ensure_cargo_fmt:
     name: Ensure 'cargo fmt' has been run
@@ -80,6 +80,7 @@ jobs:
           - { target: i686-unknown-linux-gnu      , os: ubuntu-20.04, use-cross: true }
           - { target: i686-unknown-linux-musl     , os: ubuntu-20.04, use-cross: true }
           - { target: x86_64-apple-darwin         , os: macos-12                      }
+          - { target: aarch64-apple-darwin        , os: macos-14                      }
           # - { target: x86_64-pc-windows-gnu       , os: windows-2019                  }
           - { target: x86_64-pc-windows-msvc      , os: windows-2019                  }
           - { target: x86_64-unknown-linux-gnu    , os: ubuntu-20.04, use-cross: true }
