@@ -19,7 +19,7 @@ _csview() {
 
     case "${cmd}" in
         csview)
-            opts="-H -n -t -d -s -p -i -h -V --no-headers --number --tsv --delimiter --style --padding --indent --sniff --header-align --body-align --help --version [FILE]"
+            opts="-H -n -t -d -s -p -i -P -h -V --no-headers --number --tsv --delimiter --style --padding --indent --sniff --header-align --body-align --disable-pager --help --version [FILE]"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

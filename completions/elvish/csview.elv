@@ -35,6 +35,8 @@ set edit:completion:arg-completer[csview] = {|@words|
             cand --number 'Prepend a column of line numbers to the table'
             cand -t 'Use ''\t'' as delimiter for tsv'
             cand --tsv 'Use ''\t'' as delimiter for tsv'
+            cand -P 'Disable pager'
+            cand --disable-pager 'Disable pager'
             cand -h 'Print help'
             cand --help 'Print help'
             cand -V 'Print version'

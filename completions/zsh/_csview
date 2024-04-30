@@ -32,6 +32,8 @@ _csview() {
 '--number[Prepend a column of line numbers to the table]' \
 '(-d --delimiter)-t[Use '\''\\t'\'' as delimiter for tsv]' \
 '(-d --delimiter)--tsv[Use '\''\\t'\'' as delimiter for tsv]' \
+'-P[Disable pager]' \
+'--disable-pager[Disable pager]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '-V[Print version]' \

@@ -8,5 +8,6 @@ complete -c csview -l body-align -d 'Specify the alignment of the table body' -r
 complete -c csview -s H -l no-headers -d 'Specify that the input has no header row'
 complete -c csview -s n -l number -d 'Prepend a column of line numbers to the table'
 complete -c csview -s t -l tsv -d 'Use \'\\t\' as delimiter for tsv'
+complete -c csview -s P -l disable-pager -d 'Disable pager'
 complete -c csview -s h -l help -d 'Print help'
 complete -c csview -s V -l version -d 'Print version'
