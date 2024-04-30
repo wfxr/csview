@@ -38,6 +38,8 @@ Register-ArgumentCompleter -Native -CommandName 'csview' -ScriptBlock {
             [CompletionResult]::new('--number', 'number', [CompletionResultType]::ParameterName, 'Prepend a column of line numbers to the table')
             [CompletionResult]::new('-t', 't', [CompletionResultType]::ParameterName, 'Use ''\t'' as delimiter for tsv')
             [CompletionResult]::new('--tsv', 'tsv', [CompletionResultType]::ParameterName, 'Use ''\t'' as delimiter for tsv')
+            [CompletionResult]::new('-P', 'P ', [CompletionResultType]::ParameterName, 'Disable pager')
+            [CompletionResult]::new('--disable-pager', 'disable-pager', [CompletionResultType]::ParameterName, 'Disable pager')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', 'help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('-V', 'V ', [CompletionResultType]::ParameterName, 'Print version')
