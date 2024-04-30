@@ -1,4 +1,11 @@
-## [1.3.1](https://github.com/wfxr/csview/compare/v1.3.0..1.3.1) (2024-04-29)
+## [1.3.2](https://github.com/wfxr/csview/compare/v1.3.1..1.3.2) (2024-04-30)
+
+### ⚙️ Miscellaneous Tasks
+
+- Add aarch64-apple-darwin target - ([4481363](https://github.com/wfxr/csview/commit/448136378a3edab2e1669efab63cd81cde20a703))
+- Update completions for new option - ([3565cfe](https://github.com/wfxr/csview/commit/3565cfee2dd62c4a22f5752ec261aa0b628e0a4a))
+
+## [1.3.1](https://github.com/wfxr/csview/compare/v1.3.0..v1.3.1) (2024-04-29)
 
 ### 🚀 Features
 
@@ -11,6 +18,7 @@
 
 ### ⚙️ Miscellaneous Tasks
 
+- Release csview version 1.3.1 - ([f6cb500](https://github.com/wfxr/csview/commit/f6cb500dc6721eb3fb7a1723de6293e41df0787b))
 - Remove stale.yml - ([d3ac13b](https://github.com/wfxr/csview/commit/d3ac13b72a6af52cc81ab4482c1db44670fdb307))
 
 ## [1.3.0](https://github.com/wfxr/csview/compare/v1.2.4..v1.3.0) (2024-04-15)
