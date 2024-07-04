@@ -79,7 +79,8 @@ fn try_main() -> anyhow::Result<()> {
     if !disable_pager && io::stdout().is_terminal() {
         match std::env::var("CSVIEW_PAGER") {
             Ok(pager) => Pager::with_pager(&pager).setup(),
-            Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF"]).setup(),
+            // XXX: the extra null byte can be removed once https://gitlab.com/imp/pager-rs/-/merge_requests/8 is merged
+            Err(_) => Pager::with_pager("less").pager_envs(["LESS=-SF\0"]).setup(),
         }
     }
 
