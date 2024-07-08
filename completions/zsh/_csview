@@ -14,7 +14,7 @@ _csview() {
     fi
 
     local context curcontext="$curcontext" state line
-    _arguments "${_arguments_options[@]}" \
+    _arguments "${_arguments_options[@]}" : \
 '-d+[Specify the field delimiter]:DELIMITER: ' \
 '--delimiter=[Specify the field delimiter]:DELIMITER: ' \
 '-s+[Specify the border style]:STYLE:(none ascii ascii2 sharp rounded reinforced markdown grid)' \
