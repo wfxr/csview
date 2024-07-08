@@ -1,7 +1,15 @@
-## [1.3.2](https://github.com/wfxr/csview/compare/v1.3.1..1.3.2) (2024-04-30)
+
+## [1.3.3](https://github.com/wfxr/csview/compare/v1.3.2..1.3.3) (2024-07-08)
+
+### 🐛 Bug Fixes
+
+- Workaround error caused by pager env - ([988add5](https://github.com/wfxr/csview/commit/988add57b9de99c61140c68fd868ee8bec79f5a2))
+
+## [1.3.2](https://github.com/wfxr/csview/compare/v1.3.1..v1.3.2) (2024-04-30)
 
 ### ⚙️ Miscellaneous Tasks
 
+- Release csview version 1.3.2 - ([ad18ac8](https://github.com/wfxr/csview/commit/ad18ac8aff948a9de49390b4d53ba0e1a733df96))
 - Add aarch64-apple-darwin target - ([4481363](https://github.com/wfxr/csview/commit/448136378a3edab2e1669efab63cd81cde20a703))
 - Update completions for new option - ([3565cfe](https://github.com/wfxr/csview/commit/3565cfee2dd62c4a22f5752ec261aa0b628e0a4a))
 
