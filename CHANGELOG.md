@@ -1,5 +1,5 @@
 
-## [1.3.3](https://github.com/wfxr/csview/compare/v1.3.2..1.3.3) (2024-07-08)
+## [1.3.3](https://github.com/wfxr/csview/compare/v1.3.2..v1.3.3) (2024-07-08)
 
 ### 🐛 Bug Fixes
 
@@ -9,7 +9,6 @@
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release csview version 1.3.2 - ([ad18ac8](https://github.com/wfxr/csview/commit/ad18ac8aff948a9de49390b4d53ba0e1a733df96))
 - Add aarch64-apple-darwin target - ([4481363](https://github.com/wfxr/csview/commit/448136378a3edab2e1669efab63cd81cde20a703))
 - Update completions for new option - ([3565cfe](https://github.com/wfxr/csview/commit/3565cfee2dd62c4a22f5752ec261aa0b628e0a4a))
 
@@ -26,7 +25,6 @@
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release csview version 1.3.1 - ([f6cb500](https://github.com/wfxr/csview/commit/f6cb500dc6721eb3fb7a1723de6293e41df0787b))
 - Remove stale.yml - ([d3ac13b](https://github.com/wfxr/csview/commit/d3ac13b72a6af52cc81ab4482c1db44670fdb307))
 
 ## [1.3.0](https://github.com/wfxr/csview/compare/v1.2.4..v1.3.0) (2024-04-15)
@@ -42,7 +40,6 @@
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release csview version 1.3.0 - ([28a09a2](https://github.com/wfxr/csview/commit/28a09a2198d69b94b64d428553e215aa9b3f0808))
 - Update dependencies - ([b9aed24](https://github.com/wfxr/csview/commit/b9aed24bc46e725a6de1c761e3eee2c508ed5338))
 - Fix release.toml - ([8b28b89](https://github.com/wfxr/csview/commit/8b28b89824b54fd110f9b73a24d8d839e8db627b))
 - Add rust-toolchain.toml & update rustfmt.toml ([#201](https://github.com/wfxr/csview/issues/201)) - ([6fc99d4](https://github.com/wfxr/csview/commit/6fc99d432a9a0670430beef1f74e8da5c126e547))
@@ -53,14 +50,12 @@
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release csview version 1.2.4 - ([9672456](https://github.com/wfxr/csview/commit/9672456e4660282fac66c1a70e3c564b375427ff))
 - Update cicd config ([#191](https://github.com/wfxr/csview/issues/191)) - ([3ea5126](https://github.com/wfxr/csview/commit/3ea512652476364ab2afcbae37d9432ce7695192))
 
 ## [1.2.3](https://github.com/wfxr/csview/compare/v1.2.2..v1.2.3) (2024-02-22)
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release csview version 1.2.3 - ([ef89bf4](https://github.com/wfxr/csview/commit/ef89bf4966de9b6b292e0c99ae2a2562893ba56f))
 - Cargo update - ([d903e78](https://github.com/wfxr/csview/commit/d903e78363b850686d2a878ab101fe50f0a6e875))
 - Update stale config - ([e39d5a9](https://github.com/wfxr/csview/commit/e39d5a9972d0e742490c068dcc49781ab761e0af))
 - Bump up dependencies - ([4e8034f](https://github.com/wfxr/csview/commit/4e8034fda7a2f212898196bf444ff7cf1229ca87))
