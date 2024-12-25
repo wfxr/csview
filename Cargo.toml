@@ -23,7 +23,7 @@ clap = { version = "4", features = ["wrap_help", "derive"] }
 exitcode = "1.1"
 anyhow = "1.0"
 unicode-width = "0"
-unicode-truncate = "1.1"
+unicode-truncate = "2.0"
 itertools = "0.13"
 [target.'cfg(target_family = "unix")'.dependencies]
 pager = { version = "0.16", optional = true }
