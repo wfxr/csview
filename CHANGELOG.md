@@ -1,4 +1,14 @@
 
+## [1.3.4](https://github.com/wfxr/csview/compare/v1.3.3..1.3.4) (2024-12-28)
+
+### 🚀 Features
+
+- Colored help message - ([d08efb0](https://github.com/wfxr/csview/commit/d08efb0b044bce4df81960ac1e877e2ca209c993))
+
+### ⚙️ Miscellaneous Tasks
+
+- Ignore release commit message for cliff - ([70d956e](https://github.com/wfxr/csview/commit/70d956ea6de85909b7d935ca8febca9897d0d844))
+
 ## [1.3.3](https://github.com/wfxr/csview/compare/v1.3.2..v1.3.3) (2024-07-08)
 
 ### 🐛 Bug Fixes
