@@ -1,11 +1,26 @@
 use std::path::PathBuf;
 
-use clap::{Parser, ValueEnum, ValueHint};
+use clap::ValueHint;
+use clap::{
+    builder::{
+        styling::{AnsiColor, Effects},
+        Styles,
+    },
+    Parser, ValueEnum,
+};
 
 #[derive(Parser)]
-#[command(about, version)]
-#[command(disable_help_subcommand = true)]
-#[command(next_line_help = true)]
+#[clap(about, version)]
+#[clap(disable_help_subcommand = true)]
+#[clap(next_line_help = true)]
+#[clap(
+    styles(Styles::styled()
+        .header(AnsiColor::Yellow.on_default() | Effects::BOLD)
+        .usage(AnsiColor::Yellow.on_default() | Effects::BOLD)
+        .literal(AnsiColor::Green.on_default() | Effects::BOLD)
+        .placeholder(AnsiColor::Cyan.on_default())
+    )
+)]
 pub struct App {
     /// File to view.
     #[arg(name = "FILE", value_hint = ValueHint::FilePath)]

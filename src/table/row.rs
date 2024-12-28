@@ -17,7 +17,7 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
     }
 }
 
-impl<'a> Row<'a> {
+impl Row<'_> {
     pub fn write<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize], align: Alignment) -> Result<()> {
         let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;

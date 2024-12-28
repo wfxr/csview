@@ -15,15 +15,15 @@ _csview() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" : \
-'-d+[Specify the field delimiter]:DELIMITER: ' \
-'--delimiter=[Specify the field delimiter]:DELIMITER: ' \
+'-d+[Specify the field delimiter]:DELIMITER:_default' \
+'--delimiter=[Specify the field delimiter]:DELIMITER:_default' \
 '-s+[Specify the border style]:STYLE:(none ascii ascii2 sharp rounded reinforced markdown grid)' \
 '--style=[Specify the border style]:STYLE:(none ascii ascii2 sharp rounded reinforced markdown grid)' \
-'-p+[Specify padding for table cell]:PADDING: ' \
-'--padding=[Specify padding for table cell]:PADDING: ' \
-'-i+[Specify global indent for table]:INDENT: ' \
-'--indent=[Specify global indent for table]:INDENT: ' \
-'--sniff=[Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit]:LIMIT: ' \
+'-p+[Specify padding for table cell]:PADDING:_default' \
+'--padding=[Specify padding for table cell]:PADDING:_default' \
+'-i+[Specify global indent for table]:INDENT:_default' \
+'--indent=[Specify global indent for table]:INDENT:_default' \
+'--sniff=[Limit column widths sniffing to the specified number of rows. Specify "0" to cancel limit]:LIMIT:_default' \
 '--header-align=[Specify the alignment of the table header]:HEADER_ALIGN:(left center right)' \
 '--body-align=[Specify the alignment of the table body]:BODY_ALIGN:(left center right)' \
 '-H[Specify that the input has no header row]' \
