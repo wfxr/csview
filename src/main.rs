@@ -19,10 +19,10 @@ use pager::Pager;
 
 fn main() {
     if let Err(e) = try_main() {
-        if let Some(ioerr) = e.root_cause().downcast_ref::<io::Error>() {
-            if ioerr.kind() == io::ErrorKind::BrokenPipe {
-                process::exit(exitcode::OK);
-            }
+        if let Some(ioerr) = e.root_cause().downcast_ref::<io::Error>()
+            && ioerr.kind() == io::ErrorKind::BrokenPipe
+        {
+            process::exit(exitcode::OK);
         }
 
         if let Some(csverr) = e.root_cause().downcast_ref::<csv::Error>() {

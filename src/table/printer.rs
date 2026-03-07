@@ -43,10 +43,10 @@ impl TablePrinter {
             let seq_str = self.with_seq.then(|| seq.to_string());
             let row: Row = seq_str.iter().map(|s| s.as_str()).chain(record.into_iter()).collect();
             row.writeln(wtr, fmt, widths, fmt.body_align)?;
-            if let Some(mid) = &fmt.rowseps.mid {
-                if iter.peek().is_some() {
-                    fmt.write_row_sep(wtr, widths, mid)?;
-                }
+            if let Some(mid) = &fmt.rowseps.mid
+                && iter.peek().is_some()
+            {
+                fmt.write_row_sep(wtr, widths, mid)?;
             }
             seq += 1;
         }
