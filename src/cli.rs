@@ -2,11 +2,11 @@ use std::path::PathBuf;
 
 use clap::ValueHint;
 use clap::{
-    builder::{
-        styling::{AnsiColor, Effects},
-        Styles,
-    },
     Parser, ValueEnum,
+    builder::{
+        Styles,
+        styling::{AnsiColor, Effects},
+    },
 };
 
 #[derive(Parser)]
