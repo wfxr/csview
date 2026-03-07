@@ -13,3 +13,15 @@ updates:
     prefix: "chore"
     prefix-development: "chore"
     include: "scope"
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+  reviewers:
+  - wfxr
+  labels:
+  - dependencies
+  commit-message:
+    prefix: "chore"
+    prefix-development: "chore"
+    include: "scope"

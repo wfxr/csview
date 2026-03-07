@@ -18,7 +18,7 @@ jobs:
     name: Extract crate metadata
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Extract crate information
         id: crate_metadata
         run: |
@@ -43,7 +43,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: cargo fmt -- --check
 
   # min_version:
@@ -68,28 +68,30 @@ jobs:
     name: ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
     needs: crate_metadata
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
         job:
-          - { target: aarch64-unknown-linux-gnu   , os: ubuntu-20.04, use-cross: true }
-          - { target: aarch64-unknown-linux-musl  , os: ubuntu-20.04, use-cross: true }
-          - { target: arm-unknown-linux-gnueabihf , os: ubuntu-20.04, use-cross: true }
-          - { target: arm-unknown-linux-musleabihf, os: ubuntu-20.04, use-cross: true }
-          - { target: i686-pc-windows-msvc        , os: windows-2019                  }
-          - { target: i686-unknown-linux-gnu      , os: ubuntu-20.04, use-cross: true }
-          - { target: i686-unknown-linux-musl     , os: ubuntu-20.04, use-cross: true }
-          - { target: x86_64-apple-darwin         , os: macos-13                      }
-          - { target: aarch64-apple-darwin        , os: macos-latest                  }
-          # - { target: x86_64-pc-windows-gnu       , os: windows-2019                  }
-          - { target: x86_64-pc-windows-msvc      , os: windows-2019                  }
-          - { target: x86_64-unknown-linux-gnu    , os: ubuntu-20.04, use-cross: true }
-          - { target: x86_64-unknown-linux-musl   , os: ubuntu-20.04, use-cross: true }
+          - { target: aarch64-unknown-linux-gnu   , os: ubuntu-latest, use-cross: true }
+          - { target: aarch64-unknown-linux-musl  , os: ubuntu-latest, use-cross: true }
+          - { target: arm-unknown-linux-gnueabihf , os: ubuntu-latest, use-cross: true }
+          - { target: arm-unknown-linux-musleabihf, os: ubuntu-latest, use-cross: true }
+          - { target: i686-pc-windows-msvc        , os: windows-latest                }
+          - { target: i686-unknown-linux-gnu      , os: ubuntu-latest, use-cross: true }
+          - { target: i686-unknown-linux-musl     , os: ubuntu-latest, use-cross: true }
+          - { target: x86_64-apple-darwin         , os: macos-latest                   }
+          - { target: aarch64-apple-darwin        , os: macos-latest                   }
+          # - { target: x86_64-pc-windows-gnu       , os: windows-latest                }
+          - { target: x86_64-pc-windows-msvc      , os: windows-latest                }
+          - { target: x86_64-unknown-linux-gnu    , os: ubuntu-latest, use-cross: true }
+          - { target: x86_64-unknown-linux-musl   , os: ubuntu-latest, use-cross: true }
     env:
       BUILD_CMD: cargo
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install prerequisites
         shell: bash
@@ -312,13 +314,13 @@ jobs:
           fakeroot dpkg-deb --build "${DPKG_DIR}" "${DPKG_PATH}"
 
       - name: "Artifact upload: tarball"
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.package.outputs.PKG_NAME }}
           path: ${{ steps.package.outputs.PKG_PATH }}
 
       - name: "Artifact upload: Debian package"
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         if: steps.debian-package.outputs.DPKG_NAME
         with:
           name: ${{ steps.debian-package.outputs.DPKG_NAME }}
@@ -332,11 +334,9 @@ jobs:
           echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
 
       - name: Publish archives and packages
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: steps.is-release.outputs.IS_RELEASE
         with:
           files: |
             ${{ steps.package.outputs.PKG_PATH }}
             ${{ steps.debian-package.outputs.DPKG_PATH }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
