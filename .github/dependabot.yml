@@ -5,8 +5,6 @@ updates:
   schedule:
     interval: weekly
   open-pull-requests-limit: 10
-  reviewers:
-  - wfxr
   labels:
   - dependencies
   commit-message:
@@ -17,11 +15,8 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
-  reviewers:
-  - wfxr
   labels:
   - dependencies
   commit-message:
-    prefix: "chore"
-    prefix-development: "chore"
+    prefix: "ci"
     include: "scope"
