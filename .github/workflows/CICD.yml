@@ -18,7 +18,7 @@ jobs:
     name: Extract crate metadata
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Extract crate information
         id: crate_metadata
         run: |
@@ -43,7 +43,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: cargo fmt -- --check
 
   # min_version:
@@ -90,7 +90,7 @@ jobs:
       BUILD_CMD: cargo
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install prerequisites
         shell: bash
