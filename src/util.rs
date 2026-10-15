@@ -43,11 +43,12 @@ pub fn table_style(
             None,
             RowSep::new('─', '┗', '┴', '┛'),
         ),
-        TableStyle::Markdown => {
-            StyleBuilder::new()
-                .col_sep('|')
-                .row_seps(None, RowSep::new('-', '|', '|', '|'), None, None)
-        }
+        TableStyle::Markdown => StyleBuilder::new().html_line_breaks(true).col_sep('|').row_seps(
+            None,
+            RowSep::new('-', '|', '|', '|'),
+            None,
+            None,
+        ),
         TableStyle::Grid => StyleBuilder::new().col_sep('│').row_seps(
             RowSep::new('─', '┌', '┬', '┐'),
             RowSep::new('─', '├', '┼', '┤'),
