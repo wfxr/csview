@@ -19,11 +19,40 @@ impl<'a> FromIterator<&'a str> for Row<'a> {
 
 impl Row<'_> {
     pub fn write<T: Write>(&self, wtr: &mut T, fmt: &Style, widths: &[usize], align: Alignment) -> Result<()> {
+        if self.cells.iter().all(|cell| !cell.contains(['\n', '\r'])) {
+            return self.write_line(wtr, fmt, widths, align, &self.cells);
+        }
+        let mut lines: Vec<_> = self.cells.iter().map(|cell| cell.split('\n').peekable()).collect();
+        loop {
+            let cells: Vec<_> = lines
+                .iter_mut()
+                .map(|lines| {
+                    let line = lines.next().unwrap_or("");
+                    line.strip_suffix('\r').unwrap_or(line)
+                })
+                .collect();
+            self.write_line(wtr, fmt, widths, align, &cells)?;
+            if lines.iter_mut().all(|lines| lines.peek().is_none()) {
+                break;
+            }
+            writeln!(wtr)?;
+        }
+        Ok(())
+    }
+
+    fn write_line<T: Write>(
+        &self,
+        wtr: &mut T,
+        fmt: &Style,
+        widths: &[usize],
+        align: Alignment,
+        cells: &[&str],
+    ) -> Result<()> {
         let sep = fmt.colseps.mid.map(|c| c.to_string()).unwrap_or_default();
         write!(wtr, "{:indent$}", "", indent = fmt.indent)?;
         fmt.colseps.lhs.map(|sep| fmt.write_col_sep(wtr, sep)).transpose()?;
         Itertools::intersperse(
-            self.cells
+            cells
                 .iter()
                 .zip(widths)
                 .map(|(cell, &width)| cell.unicode_pad(width, align, true))
@@ -43,8 +72,19 @@ impl Row<'_> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::table::StyleBuilder;
     use anyhow::Result;
     use std::str;
+
+    #[test]
+    fn multiline_alignment_and_truncation() -> Result<()> {
+        let row = Row::from_iter(["ab\n中中\n", "x\r\ny"]);
+        let fmt = StyleBuilder::default().indent(2).padding(0).build();
+        let mut buf = Vec::new();
+        row.writeln(&mut buf, &fmt, &[2, 2], Alignment::Right)?;
+        assert_eq!("  |ab| x|\n  |中| y|\n  |  |  |\n", str::from_utf8(&buf)?);
+        Ok(())
+    }
 
     #[test]
     fn write_ascii_row() -> Result<()> {

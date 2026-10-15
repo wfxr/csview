@@ -114,6 +114,9 @@ impl Default for ColSeps {
 
 #[derive(Debug, Clone, Copy)]
 pub struct Style {
+    /// Render embedded newlines as HTML breaks for Markdown tables.
+    pub html_line_breaks: bool,
+
     /// Column style
     pub colseps: ColSeps,
 
@@ -136,6 +139,7 @@ pub struct Style {
 impl Default for Style {
     fn default() -> Self {
         Self {
+            html_line_breaks: false,
             indent: 0,
             padding: 1,
             colseps: ColSeps::default(),
@@ -181,6 +185,11 @@ pub struct StyleBuilder {
 impl StyleBuilder {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn html_line_breaks(mut self, enabled: bool) -> Self {
+        self.format.html_line_breaks = enabled;
+        self
     }
 
     pub fn padding(mut self, padding: usize) -> Self {

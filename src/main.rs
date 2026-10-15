@@ -96,7 +96,8 @@ fn try_main() -> anyhow::Result<()> {
         });
 
     let sniff = if sniff == 0 { usize::MAX } else { sniff };
-    let table = TablePrinter::new(rdr, sniff, number)?;
-    table.writeln(wtr, &table_style(style, padding, indent, header_align, body_align))?;
+    let style = table_style(style, padding, indent, header_align, body_align);
+    let table = TablePrinter::new(rdr, sniff, number, style)?;
+    table.writeln(wtr)?;
     Ok(())
 }

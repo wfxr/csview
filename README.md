@@ -24,6 +24,7 @@
 * Memory efficient.
 * Correctly align [CJK](https://en.wikipedia.org/wiki/CJK_characters) and emoji characters.
 * Support `tsv` and custom delimiters.
+* Display embedded field newlines on separate table lines (as `<br>` in Markdown style).
 * Support different styles, including markdown table.
 
 ### Usage
